@@ -215,101 +215,11 @@
       font-size: 0.84rem; z-index: 99999;
       animation: matrixReveal 1.1s ease forwards;
     }
-
-    /* ============================
-          ETHOS LOCK
-    ============================ */
-    #ethos-lock {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.96);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000000;
-      transition: opacity 0.4s ease;
-    }
-
-    #ethos-lock.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .lock-box {
-      border: 2px solid currentColor;
-      padding: 30px 35px;
-      width: 380px;
-      background: rgba(0,0,0,0.85);
-      box-shadow: 0 0 20px currentColor;
-      text-align: center;
-      animation: matrixReveal 0.4s ease-out;
-    }
-
-    .lock-title {
-      font-size: 1.3rem;
-      margin-bottom: 12px;
-      letter-spacing: 4px;
-    }
-
-    .lock-sub {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
-
-    #lockInput {
-      width: 100%;
-      padding: 12px;
-      background: transparent;
-      border: 1px solid currentColor;
-      color: currentColor;
-      font-family: inherit;
-      font-size: 1rem;
-      outline: none;
-      margin-bottom: 14px;
-    }
-
-    #lockBtn {
-      width: 100%;
-      padding: 12px;
-      background: transparent;
-      border: 1px solid currentColor;
-      color: currentColor;
-      font-weight: bold;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    #lockBtn:hover {
-      box-shadow: 0 0 12px currentColor;
-      transform: scale(0.97);
-    }
-
-    #lockError {
-      margin-top: 12px;
-      font-size: 0.85rem;
-      color: #ff4444;
-      min-height: 1em;
-    }
   </style>
 </head>
 
 <body>
   <canvas id="matrix"></canvas>
-
-  <!-- ETHOS LOCK -->
-  <div id="ethos-lock">
-    <div class="lock-box">
-      <div class="lock-title">[ ETHOS_SECURITY ]</div>
-      <div class="lock-sub">MASTER PASSWORD REQUIRED</div>
-
-      <input type="password" id="lockInput" placeholder="ENTER PASSWORD..." autocomplete="off">
-      <button id="lockBtn">ACCESS</button>
-
-      <div id="lockError"></div>
-    </div>
-  </div>
 
   <div id="ethos-topbar">
     <button class="top-btn" onclick="openEthosAI()">[ ETHOS_AI ]</button>
@@ -385,35 +295,6 @@
     }
 
     setInterval(drawMatrix, 50);
-
-    /* ============================
-          ETHOS LOCK
-    ============================ */
-    const lockOverlay = document.getElementById("ethos-lock");
-    const lockInput = document.getElementById("lockInput");
-    const lockBtn = document.getElementById("lockBtn");
-    const lockError = document.getElementById("lockError");
-
-    function unlockEthos() {
-      const pass = lockInput.value.trim().toLowerCase();
-
-      if (pass === "reset") {
-        lockOverlay.classList.add("hidden");
-        lockError.textContent = "";
-        lockInput.value = "";
-      } else {
-        lockError.textContent = "ACCESS DENIED";
-        lockInput.value = "";
-      }
-    }
-
-    lockBtn.addEventListener("click", unlockEthos);
-
-    lockInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") unlockEthos();
-    });
-
-    setTimeout(() => lockInput.focus(), 200);
 
     /* ============================
           VARIABLES BASE
@@ -530,7 +411,6 @@
   { nombre: "Venge.io", url: "https://venge.io/", categoria: "ACCION", logo: "https://example.com/logo-venge-io.png" },
   { nombre: "Vex4", url: "https://ubg98.github.io/Vex4/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-vex4.png" },
   { nombre: "Tetris", url: "https://block-blast.io/block-blast.embed", categoria: "ARCADE", logo: "https://example.com/logo-tetris.png" }
-
     ];
 
     let favoritos = JSON.parse(localStorage.getItem("ethos_favs")) || [];
@@ -625,7 +505,7 @@
     }
 
     function openSpotify() {
-      window.open("https://open.spotify.com/embed/playlist/4L7KXkQeIQpxWNdXMfBVSM?utm_source=generator&theme=0", "_blank");
+      window.open("https://open.spotify.com", "_blank");
     }
 
     /* ============================
