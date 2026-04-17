@@ -425,10 +425,37 @@ function toggleFav(nombre, e) {
   mostrarJuegos(searchBar.value, false);
 }
 
-/* SISTEMA ANTIC */
+/* ABRIR JUEGO — SISTEMA ANTIC ETHOS */
 function abrirJuego(url) {
-  const win = window.open("", "_blank", "noopener,noreferrer");
-  win.location = url;
+  const win = window.open("about:blank", "_blank");
+
+  win.document.write(`
+    <html>
+      <head>
+        <title>ETHOS — GAME MODE</title>
+        <style>
+          html, body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+          }
+          iframe {
+            border: none;
+            width: 100vw;
+            height: 100vh;
+          }
+        </style>
+      </head>
+      <body>
+        <iframe src="${url}" allowfullscreen></iframe>
+      </body>
+    </html>
+  `);
+
+  win.document.close();
 }
 
 /* BUSCADOR */
