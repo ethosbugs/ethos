@@ -218,6 +218,24 @@
 
   <!-- MATRIX BACKGROUND -->
   <canvas id="matrix"></canvas>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" style="display:none; position:absolute; inset:0; z-index:10; background:rgba(0,0,0,0.55); flex-direction:column; justify-content:center; align-items:center;">
+
+  <div id="terminalBox" class="terminal">
+    <div class="fakeInput" id="fakeInput">
+      <span id="fakeText" class="fakeInputText"></span>
+      <span id="cursor" class="cursor">█</span>
+    </div>
+
+    <input id="realInput" type="password" autocomplete="off">
+  </div>
+
+  <div id="alertBox"></div>
+  <div id="lockMessage"></div>
+  <div id="accessDeniedBig">ACCESS DENIED</div>
+  <div id="accessGranted">ACCESS GRANTED</div>
+
+</div>
 
   <!-- TOPBAR -->
   <div id="ethos-topbar">
