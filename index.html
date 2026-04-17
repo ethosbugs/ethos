@@ -14,35 +14,41 @@
   max-width: 1200px;
 }
   
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #050505; }
-
-/* BASE — VERD NEON */
+/* === SCROLLBAR BASE (VERD NEON) === */
+::-webkit-scrollbar { 
+  width: 8px; 
+}
+::-webkit-scrollbar-track { 
+  background: #050505; 
+}
 ::-webkit-scrollbar-thumb {
-  background: #00ff00;
+  background: #00ff00;        /* VERD NEON */
   border: 1px solid #003300;
-  filter: none !important;
+  filter: none !important;    /* EVITA HUE-ROTATE */
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #33ff33;
   box-shadow: 0 0 10px #0f0;
 }
-/* TEMA VERMELL */
+
+/* === TEMA VERMELL === */
 body.theme-red::-webkit-scrollbar-thumb {
-  background: #ff0000;
+  background: #ff0000;        /* VERMELL NEON */
   border-color: #660000;
 }
 body.theme-red::-webkit-scrollbar-thumb:hover {
   background: #ff3333;
 }
-/* TEMA BLAU */
+
+/* === TEMA BLAU === */
 body.theme-blue::-webkit-scrollbar-thumb {
-  background: #009dff;
+  background: #009dff;        /* BLAU NEON */
   border-color: #004466;
 }
 body.theme-blue::-webkit-scrollbar-thumb:hover {
   background: #33cfff;
 }
+
 
     
     
