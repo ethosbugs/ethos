@@ -3,206 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ETHOS TECHNOLOGIES V2.7</title>
+  <title>ETHOS TECHNOLOGIES V3</title>
 
   <style>
-    .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-}
-  
-/* === SCROLLBAR BASE (VERD NEON) === */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #050505; }
-::-webkit-scrollbar-thumb {
-  background: #00ff00;
-  border: 1px solid #003300;
-  filter: none !important;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #33ff33;
-  box-shadow: 0 0 10px #0f0;
-}
 
-/* === TEMA VERMELL === */
-body.theme-red::-webkit-scrollbar-thumb {
-  background: #ff0000;
-  border-color: #660000;
-}
-body.theme-red::-webkit-scrollbar-thumb:hover {
-  background: #ff3333;
-}
+  /* === GRID === */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+  }
 
-/* === TEMA BLAU === */
-body.theme-blue::-webkit-scrollbar-thumb {
-  background: #009dff;
-  border-color: #004466;
-}
-body.theme-blue::-webkit-scrollbar-thumb:hover {
-  background: #33cfff;
-}
-    
-    
-    @keyframes matrixReveal {
-      0% { opacity: 0; transform: scaleX(0.9) translateY(10px); clip-path: inset(0 50% 0 50%); filter: brightness(5) blur(5px); }
-      100% { opacity: 1; transform: scaleX(1) translateY(0); clip-path: inset(0 0 0 0); filter: brightness(1) blur(0); }
-    }
+  /* === SCROLLBAR BASE (VERD) === */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #050505; }
+  ::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border: 1px solid #003300;
+    filter: none !important;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #33ff33;
+    box-shadow: 0 0 10px #0f0;
+  }
 
-    body {
-      cursor: url('https://files.catbox.moe/9744ia.cur'), auto;
-      background: #050505;
-      color: #0f0;
-      font-family: 'Consolas', 'Courier New', monospace;
-      margin: 0;
-      padding: 80px 20px 40px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-      transition: filter 0.3s ease;
-    }
-body.theme-red {
-  color: #ff0000;
-}
+  /* === SCROLLBAR TEMA VERMELL === */
+  body.theme-red::-webkit-scrollbar-thumb {
+    background: #ff0000;
+    border-color: #660000;
+  }
+  body.theme-red::-webkit-scrollbar-thumb:hover {
+    background: #ff3333;
+  }
 
-    body.theme-red {
-  filter: none !important;
-}
-body.theme-blue { filter: hue-rotate(220deg); }
+  /* === SCROLLBAR TEMA BLAU === */
+  body.theme-blue::-webkit-scrollbar-thumb {
+    background: #00aaff;
+    border-color: #004466;
+  }
+  body.theme-blue::-webkit-scrollbar-thumb:hover {
+    background: #33cfff;
+  }
 
-    #ethos-topbar {
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 55px;
-      background: rgba(0,0,0,0.85);
-      border-bottom: 2px solid #0f0;
-      display: flex; align-items: center; gap: 12px;
-      padding: 0 20px;
-      z-index: 99999;
-      backdrop-filter: blur(4px);
-    }
+  /* === ANIMACIÓ MATRIX === */
+  @keyframes matrixReveal {
+    0% { opacity: 0; transform: scaleX(0.9) translateY(10px); clip-path: inset(0 50% 0 50%); filter: brightness(5) blur(5px); }
+    100% { opacity: 1; transform: scaleX(1) translateY(0); clip-path: inset(0 0 0 0); filter: brightness(1) blur(0); }
+  }
 
-    .top-btn {
-      background: transparent;
-      border: 1px solid #0f0;
-      color: #0f0;
-      padding: 8px 18px;
-      font-size: 0.9rem;
-      transition: 0.25s;
-      text-transform: uppercase;
-    }
-    .top-btn:hover { background: #0f0; color: #000; box-shadow: 0 0 12px #0f0; }
+  /* === BODY BASE (VERD) === */
+  body {
+    cursor: url('https://files.catbox.moe/9744ia.cur'), auto;
+    background: #050505;
+    color: #00ff00;
+    font-family: 'Consolas', 'Courier New', monospace;
+    margin: 0;
+    padding: 80px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    transition: color 0.3s ease, filter 0.3s ease;
+  }
 
-    #matrix {
-      position: fixed; inset: 0; z-index: -2;
-      pointer-events: none; opacity: 0.3;
-    }
+  /* === BODY TEMA VERMELL === */
+  body.theme-red {
+    color: #ff0000;
+    filter: none !important;
+  }
 
-    h1 {
-      font-size: 2.2rem; letter-spacing: 5px;
-      border-bottom: 2px solid #0f0;
-      text-shadow: 0 0 10px #0f0;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
+  /* === BODY TEMA BLAU === */
+  body.theme-blue {
+    color: #00aaff;
+    filter: none !important;
+  }
 
-    .vpn-notice {
-      color: #ff4444; font-size: 1.1rem;
-      margin-bottom: 28px;
-      text-shadow: 0 0 6px #ff0000;
-      letter-spacing: 1px; text-align: center;
-    }
+  /* === TOPBAR === */
+  #ethos-topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 55px;
+    background: rgba(0,0,0,0.85);
+    border-bottom: 2px solid currentColor;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 20px;
+    z-index: 99999;
+    backdrop-filter: blur(4px);
+  }
 
-    .search-wrapper { width: 100%; max-width: 600px; margin-bottom: 20px; }
-    .search-container {
-      display: flex; align-items: center;
-      border: 1px solid #0f0;
-      padding: 12px 15px;
-      background: rgba(0,0,0,0.8);
-      box-shadow: inset 0 0 10px rgba(0,255,0,0.1);
-    }
-    #searchBar {
-      flex-grow: 1; background: transparent; border: none;
-      color: #0f0; outline: none; font-size: 1rem;
-    }
+  .top-btn {
+    background: transparent;
+    border: 1px solid currentColor;
+    color: currentColor;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    transition: 0.25s;
+    text-transform: uppercase;
+  }
+  .top-btn:hover { background: currentColor; color: #000; box-shadow: 0 0 12px currentColor; }
 
-    .categories {
-      display: flex; gap: 8px; margin-bottom: 30px;
-      flex-wrap: wrap; justify-content: center;
-    }
+  /* === TÍTOL === */
+  h1 {
+    font-size: 2.2rem; letter-spacing: 5px;
+    border-bottom: 2px solid currentColor;
+    text-shadow: 0 0 10px currentColor;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
 
-    .cat-btn {
-      background: transparent;
-      border: 1px solid rgba(0,255,0,0.3);
-      color: rgba(0,255,0,0.6);
-      padding: 6px 14px; font-size: 0.75rem;
-      transition: 0.3s; text-transform: uppercase;
-    }
-    .cat-btn:hover { border-color: #0f0; color: #0f0; background: rgba(0,255,0,0.05); }
-    .cat-btn.active { border-color: #0f0; color: #0f0; background: rgba(0,255,0,0.2); box-shadow: 0 0 15px rgba(0,255,0,0.3); }
+  /* === VPN NOTICE === */
+  .vpn-notice {
+    color: currentColor;
+    font-size: 1.1rem;
+    margin-bottom: 28px;
+    text-shadow: 0 0 6px currentColor;
+    letter-spacing: 1px; text-align: center;
+  }
 
-    .game-card { position: relative; display: flex; opacity: 0; }
-    .game-card.animate { animation: matrixReveal 0.4s ease forwards; }
+  /* === SEARCH === */
+  .search-wrapper { width: 100%; max-width: 600px; margin-bottom: 20px; }
+  .search-container {
+    display: flex; align-items: center;
+    border: 1px solid currentColor;
+    padding: 12px 15px;
+    background: rgba(0,0,0,0.8);
+    box-shadow: inset 0 0 10px currentColor;
+  }
+  #searchBar {
+    flex-grow: 1; background: transparent; border: none;
+    color: currentColor; outline: none; font-size: 1rem;
+  }
 
-    .game-logo {
-      width: 100%; height: 120px; object-fit: cover;
-      margin-bottom: 8px; border-bottom: 1px solid rgba(0,255,0,0.3);
-      filter: brightness(0.85); transition: 0.25s;
-    }
+  /* === CATEGORIES === */
+  .categories {
+    display: flex; gap: 8px; margin-bottom: 30px;
+    flex-wrap: wrap; justify-content: center;
+  }
 
-    .btn-hacker {
-      flex-grow: 1; background: rgba(0,40,0,0.2);
-      border: 1px solid rgba(0,255,0,0.4);
-      color: #0f0; padding: 14px;
-      font-weight: bold; text-transform: uppercase;
-      transition: 0.3s; text-align: left;
-      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-    }
-    .btn-hacker:hover { background: #0f0; color: #000; box-shadow: 0 0 20px rgba(0,255,0,0.6); transform: translateY(-2px); }
+  .cat-btn {
+    background: transparent;
+    border: 1px solid currentColor;
+    color: currentColor;
+    padding: 6px 14px; font-size: 0.75rem;
+    transition: 0.3s; text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .cat-btn:hover { opacity: 1; box-shadow: 0 0 10px currentColor; }
+  .cat-btn.active { opacity: 1; background: currentColor; color: #000; }
 
-    .fav-star {
-      position: absolute; right: 8px; top: 50%;
-      transform: translateY(-50%);
-      background: transparent; border: none;
-      color: rgba(0,255,0,0.3); font-size: 1.2rem;
-      transition: 0.2s;
-    }
-    .fav-star.active { color: #ff0; text-shadow: 0 0 10px #ff0; }
+  /* === STATUS BAR === */
+  .status-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 45px; padding: 0 20px;
+    background: rgba(0,0,0,0.85);
+    border-top: 2px solid currentColor;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.75rem; letter-spacing: 1px;
+    z-index: 99999;
+  }
+  .status-bar div:nth-child(2) {
+    flex: 1;
+    text-align: center;
+  }
 
-    .status-bar {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      height: 45px; padding: 0 20px;
-      background: rgba(0,0,0,0.85);
-      border-top: 2px solid #0f0;
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.75rem; letter-spacing: 1px;
-      z-index: 99999;
+  /* === GAME CARDS === */
+  .game-card { position: relative; display: flex; opacity: 0; }
+  .game-card.animate { animation: matrixReveal 0.4s ease forwards; }
 
-      .status-bar div:nth-child(2) {
-  flex: 1;
-  text-align: center;
-}
+  .btn-hacker {
+    flex-grow: 1; background: rgba(0,0,0,0.4);
+    border: 1px solid currentColor;
+    color: currentColor; padding: 14px;
+    font-weight: bold; text-transform: uppercase;
+    transition: 0.3s; text-align: left;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  }
+  .btn-hacker:hover { background: currentColor; color: #000; box-shadow: 0 0 20px currentColor; transform: translateY(-2px); }
 
-    }
+  .fav-star {
+    position: absolute; right: 8px; top: 50%;
+    transform: translateY(-50%);
+    background: transparent; border: none;
+    color: currentColor; font-size: 1.2rem;
+    opacity: 0.5;
+    transition: 0.2s;
+  }
+  .fav-star:hover { opacity: 1; }
+  .fav-star.active { color: #ff0; text-shadow: 0 0 10px #ff0; opacity: 1; }
+
   </style>
 </head>
-
 <body>
 
+  <!-- MATRIX BACKGROUND -->
   <canvas id="matrix"></canvas>
 
+  <!-- TOPBAR -->
   <div id="ethos-topbar">
     <button class="top-btn" onclick="openEthosAI()">[ ETHOS_AI ]</button>
     <button class="top-btn" onclick="openSpotify()">[ SPOTIFY ]</button>
     <button class="top-btn" onclick="cycleTheme()">[ THEME ]</button>
   </div>
 
+  <!-- TITLE -->
   <h1>[ ETHOS_SYSTEM ]</h1>
 
+  <!-- VPN NOTICE -->
   <div class="vpn-notice">
     JUEGOS BLOQUEADOS? —
     <a href="https://chromewebstore.google.com/detail/free-vpn-for-chrome-vpn-p/majdfhpaihoncoakbjgbdhglocklcgno" target="_blank">
@@ -210,24 +219,30 @@ body.theme-blue { filter: hue-rotate(220deg); }
     </a>
   </div>
 
+  <!-- SEARCH -->
   <div class="search-wrapper">
     <div class="search-container">
       <input type="text" id="searchBar" placeholder="SYSTEM SEARCH ..." autocomplete="off">
     </div>
   </div>
 
+  <!-- CATEGORIES -->
   <div class="categories" id="catBar"></div>
 
+  <!-- GAME GRID (sense jocs encara) -->
   <div class="grid" id="listaJuegos"></div>
 
+  <!-- STATUS BAR -->
   <div class="status-bar">
     <div>NÚMERO DE JUEGOS: <span id="counter">0</span></div>
     <div><span id="clock">00:00:00</span></div>
     <div>v.236</div>
   </div>
-
 <script>
-/* MATRIX */
+
+/* ============================
+      MATRIX BACKGROUND
+============================ */
 const canvas = document.getElementById('matrix');
 const ctx = canvas.getContext('2d');
 
@@ -260,9 +275,12 @@ function drawMatrix() {
 }
 setInterval(drawMatrix, 50);
 
-/* JUEGOS */
-let juegosRaw = [
-  { nombre: "Ballistic", url: "https://ubg98.github.io/Ballistic/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-ballistic.png" },
+
+/* ============================
+      VARIABLES BASE
+============================ */
+let juegos = [
+    { nombre: "Ballistic", url: "https://ubg98.github.io/Ballistic/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-ballistic.png" },
   { nombre: "Blumgi Slime", url: "https://ubg98.github.io/BlumgiSlime/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-blumgi-slime.png" },
   { nombre: "Fruit Ninja", url: "https://ubg98.github.io/FruitNinja/", categoria: "PUZZLE", logo: "https://example.com/logo-fruit-ninja.png" },
   { nombre: "Save the Doge", url: "https://ubg98.github.io/SaveTheDoge/", categoria: "PUZZLE", logo: "https://example.com/logo-save-the-doge.png" },
@@ -373,9 +391,7 @@ let juegosRaw = [
   { nombre: "Venge.io", url: "https://venge.io/", categoria: "ACCION", logo: "https://example.com/logo-venge-io.png" },
   { nombre: "Vex4", url: "https://ubg98.github.io/Vex4/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-vex4.png" },
   { nombre: "Tetris", url: "https://block-blast.io/block-blast.embed", categoria: "ARCADE", logo: "https://example.com/logo-tetris.png" }
-];
-let juegos = juegosRaw;
-
+];          // ← Encara buit
 let favoritos = JSON.parse(localStorage.getItem("ethos_favs")) || [];
 let currentCat = "ALL";
 
@@ -383,7 +399,10 @@ const catBar = document.getElementById("catBar");
 const contenedor = document.getElementById("listaJuegos");
 const searchBar = document.getElementById("searchBar");
 
-/* CATEGORIES */
+
+/* ============================
+      GENERAR CATEGORIES
+============================ */
 function generarCategorias() {
   catBar.innerHTML = "";
   let finalTags = [];
@@ -412,7 +431,10 @@ function generarCategorias() {
   });
 }
 
-/* MOSTRAR JUEGOS */
+
+/* ============================
+      MOSTRAR JUEGOS (BUIT)
+============================ */
 function mostrarJuegos(filtro = "", animate = true) {
   contenedor.innerHTML = "";
 
@@ -427,29 +449,14 @@ function mostrarJuegos(filtro = "", animate = true) {
     return matchSearch && matchCat;
   });
 
-  filtrados.forEach((juego, index) => {
-    const div = document.createElement("div");
-    div.className = "game-card" + (animate ? " animate" : "");
-    div.style.animationDelay = `${Math.min(index * 0.03, 1.2)}s`;
-
-    div.innerHTML = `
-      <button class="btn-hacker" onclick="abrirJuego('${juego.url}')">
-      <span>> ${juego.nombre}</span>
-        </button>
-
-      <button class="fav-star ${favoritos.includes(juego.nombre) ? "active" : ""}"
-        onclick="toggleFav('${juego.nombre}', event)">
-        ${favoritos.includes(juego.nombre) ? "★" : "☆"}
-      </button>
-    `;
-
-    contenedor.appendChild(div);
-  });
-
+  // Encara no hi ha jocs, així que només actualitzem el comptador
   document.getElementById("counter").textContent = filtrados.length;
 }
 
-/* FAVORITOS */
+
+/* ============================
+      FAVORITOS
+============================ */
 function toggleFav(nombre, e) {
   e.stopPropagation();
 
@@ -463,7 +470,10 @@ function toggleFav(nombre, e) {
   mostrarJuegos(searchBar.value, false);
 }
 
-/* ABRIR JUEGO — SISTEMA ANTIC ETHOS */
+
+/* ============================
+      OBRIR JOC (MODE ANTIC)
+============================ */
 function abrirJuego(url) {
   const win = window.open("about:blank", "_blank");
 
@@ -496,13 +506,20 @@ function abrirJuego(url) {
   win.document.close();
 }
 
-/* BUSCADOR */
+
+/* ============================
+      BUSCADOR
+============================ */
 searchBar.addEventListener("input", () => {
   mostrarJuegos(searchBar.value);
 });
 
-/* THEME */
+
+/* ============================
+      SISTEMA DE TEMES
+============================ */
 let themeIndex = 0;
+
 function cycleTheme() {
   document.body.classList.remove("theme-red", "theme-blue");
 
@@ -512,15 +529,22 @@ function cycleTheme() {
   if (themeIndex === 2) document.body.classList.add("theme-blue");
 }
 
-/* BOTONES TOPBAR */
+
+/* ============================
+      BOTONS TOPBAR
+============================ */
 function openEthosAI() {
   window.open("https://ethos-ai.vercel.app", "_blank");
 }
+
 function openSpotify() {
   window.open("https://open.spotify.com", "_blank");
 }
 
-/* CLOCK */
+
+/* ============================
+      CLOCK
+============================ */
 function updateClock() {
   const now = new Date();
   document.getElementById("clock").textContent =
@@ -529,10 +553,13 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-/* INICIALIZACIÓN */
+
+/* ============================
+      INICIALITZACIÓ
+============================ */
 generarCategorias();
 mostrarJuegos();
-</script>
 
+</script>
 </body>
 </html>
