@@ -15,16 +15,12 @@
 }
   
 /* === SCROLLBAR BASE (VERD NEON) === */
-::-webkit-scrollbar { 
-  width: 8px; 
-}
-::-webkit-scrollbar-track { 
-  background: #050505; 
-}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #050505; }
 ::-webkit-scrollbar-thumb {
-  background: #00ff00;        /* VERD NEON */
+  background: #00ff00;
   border: 1px solid #003300;
-  filter: none !important;    /* EVITA HUE-ROTATE */
+  filter: none !important;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #33ff33;
@@ -33,7 +29,7 @@
 
 /* === TEMA VERMELL === */
 body.theme-red::-webkit-scrollbar-thumb {
-  background: #ff0000;        /* VERMELL NEON */
+  background: #ff0000;
   border-color: #660000;
 }
 body.theme-red::-webkit-scrollbar-thumb:hover {
@@ -42,13 +38,12 @@ body.theme-red::-webkit-scrollbar-thumb:hover {
 
 /* === TEMA BLAU === */
 body.theme-blue::-webkit-scrollbar-thumb {
-  background: #009dff;        /* BLAU NEON */
+  background: #009dff;
   border-color: #004466;
 }
 body.theme-blue::-webkit-scrollbar-thumb:hover {
   background: #33cfff;
 }
-
     
     
     @keyframes matrixReveal {
@@ -72,8 +67,10 @@ body.theme-blue::-webkit-scrollbar-thumb:hover {
       transition: filter 0.3s ease;
     }
 
-    body.theme-red { filter: hue-rotate(120deg); }
-    body.theme-blue { filter: hue-rotate(220deg); }
+    body.theme-red {
+  filter: none !important;
+}
+body.theme-blue { filter: hue-rotate(220deg); }
 
     #ethos-topbar {
       position: fixed; top: 0; left: 0; right: 0;
