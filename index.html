@@ -5,11 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ETHOS TECHNOLOGIES V3</title>
   <style>
+    /* === MATRIX CANVAS (FONDO REAL) === */
+    #matrix {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      pointer-events: none; /* Importante: no interfiere con clics */
+    }
+
     /* === GRID === */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
+      gap: 22px;
       width: 100%;
       max-width: 1200px;
     }
@@ -30,7 +39,7 @@
     body.theme-blue::-webkit-scrollbar-thumb { background: #00aaff; border-color: #004466; }
     body.theme-blue::-webkit-scrollbar-thumb:hover { background: #33cfff; }
 
-    /* === ANIMACIÓN MATRIX === */
+    /* === ANIMACIÓN === */
     @keyframes matrixReveal {
       0% { opacity: 0; transform: scaleX(0.9) translateY(10px); clip-path: inset(0 50% 0 50%); filter: brightness(5) blur(5px); }
       100% { opacity: 1; transform: scaleX(1) translateY(0); clip-path: inset(0 0 0 0); filter: brightness(1) blur(0); }
@@ -43,7 +52,7 @@
       color: #00ff00;
       font-family: 'Consolas', 'Courier New', monospace;
       margin: 0;
-      padding: 95px 20px 60px;   /* Mejor posición - no tan abajo */
+      padding: 75px 20px 60px;   /* Más arriba */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -59,67 +68,67 @@
     #ethos-topbar {
       position: fixed; 
       top: 0; left: 0; right: 0;
-      height: 60px;
-      background: rgba(0,0,0,0.92);
-      border-bottom: 2px solid currentColor;
+      height: 62px;
+      background: rgba(0,0,0,0.95);
+      border-bottom: 3px solid currentColor;
       display: flex; 
       align-items: center; 
-      gap: 15px;
-      padding: 0 25px;
+      gap: 16px;
+      padding: 0 28px;
       z-index: 99999;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
     }
     .top-btn {
       background: transparent;
       border: 2px solid currentColor;
       color: currentColor;
-      padding: 10px 22px;
-      font-size: 0.95rem;
+      padding: 11px 24px;
+      font-size: 0.97rem;
       font-weight: bold;
       text-transform: uppercase;
-      transition: all 0.25s ease;
+      transition: all 0.3s ease;
       letter-spacing: 1px;
     }
     .top-btn:hover {
       background: currentColor;
-      color: #000;
-      box-shadow: 0 0 15px currentColor;
-      transform: translateY(-1px);
+      color: #000 !important;
+      box-shadow: 0 0 18px currentColor;
+      transform: translateY(-2px);
     }
 
     /* === TÍTULO === */
     h1 {
-      font-size: 2.45rem;
-      letter-spacing: 6px;
-      border-bottom: 2px solid currentColor;
-      text-shadow: 0 0 12px currentColor;
-      margin: 8px 0 18px 0;
+      font-size: 2.5rem;
+      letter-spacing: 7px;
+      border-bottom: 3px solid currentColor;
+      text-shadow: 0 0 15px currentColor;
+      margin: 5px 0 20px 0;
       text-transform: uppercase;
     }
 
     /* === VPN NOTICE === */
     .vpn-notice {
       color: currentColor;
-      font-size: 1.15rem;
-      margin-bottom: 28px;
+      font-size: 1.18rem;
+      margin-bottom: 30px;
       text-shadow: 0 0 8px currentColor;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-align: center;
     }
 
     /* === SEARCH === */
     .search-wrapper { 
       width: 100%; 
-      max-width: 630px; 
-      margin-bottom: 28px; 
+      max-width: 640px; 
+      margin-bottom: 30px; 
     }
     .search-container {
       display: flex; 
       align-items: center;
       border: 2px solid currentColor;
-      padding: 14px 18px;
-      background: rgba(0,0,0,0.85);
-      box-shadow: inset 0 0 12px currentColor;
+      padding: 15px 20px;
+      background: rgba(0,0,0,0.88);
+      box-shadow: inset 0 0 15px currentColor;
     }
     #searchBar {
       flex-grow: 1; 
@@ -127,15 +136,15 @@
       border: none;
       color: currentColor; 
       outline: none; 
-      font-size: 1.1rem;
+      font-size: 1.12rem;
       font-family: inherit;
     }
 
     /* === CATEGORIES === */
     .categories {
       display: flex; 
-      gap: 10px; 
-      margin-bottom: 35px;
+      gap: 12px; 
+      margin-bottom: 38px;
       flex-wrap: wrap; 
       justify-content: center;
     }
@@ -143,21 +152,18 @@
       background: transparent;
       border: 2px solid currentColor;
       color: currentColor;
-      padding: 8px 16px;
-      font-size: 0.8rem;
+      padding: 9px 18px;
+      font-size: 0.82rem;
       font-weight: bold;
       text-transform: uppercase;
       transition: all 0.3s;
-      opacity: 0.85;
+      opacity: 0.9;
     }
-    .cat-btn:hover {
+    .cat-btn:hover, .cat-btn.active {
       opacity: 1;
-      box-shadow: 0 0 12px currentColor;
-    }
-    .cat-btn.active {
       background: currentColor;
-      color: #000;
-      box-shadow: 0 0 12px currentColor;
+      color: #000 !important;
+      box-shadow: 0 0 15px currentColor;
     }
 
     /* === GAME CARDS === */
@@ -167,15 +173,15 @@
       opacity: 0; 
     }
     .game-card.animate { 
-      animation: matrixReveal 0.45s ease forwards; 
+      animation: matrixReveal 0.5s ease forwards; 
     }
 
     .btn-hacker {
       flex-grow: 1;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.55);
       border: 2px solid currentColor;
       color: currentColor;
-      padding: 16px 18px;
+      padding: 17px 20px;
       font-weight: bold;
       text-transform: uppercase;
       transition: all 0.3s ease;
@@ -184,36 +190,36 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 1.02rem;
     }
     .btn-hacker:hover {
-      background: currentColor;
-      color: #000;
-      box-shadow: 0 0 22px currentColor;
-      transform: translateY(-3px);
+      background: currentColor !important;
+      color: #000 !important;
+      box-shadow: 0 0 25px currentColor;
+      transform: translateY(-4px);
     }
 
     .fav-star {
       position: absolute;
-      right: 12px;
+      right: 14px;
       top: 50%;
       transform: translateY(-50%);
       background: transparent;
       border: none;
       color: currentColor;
-      font-size: 1.45rem;
-      opacity: 0.6;
-      transition: all 0.2s;
+      font-size: 1.5rem;
+      opacity: 0.65;
+      transition: all 0.25s;
       cursor: pointer;
       padding: 6px;
     }
     .fav-star:hover { 
       opacity: 1; 
-      transform: translateY(-50%) scale(1.25);
+      transform: translateY(-50%) scale(1.3);
     }
     .fav-star.active { 
       color: #ffff00; 
-      text-shadow: 0 0 12px #ffff00; 
+      text-shadow: 0 0 15px #ffff00; 
       opacity: 1; 
     }
 
@@ -221,21 +227,21 @@
     .status-bar {
       position: fixed; 
       bottom: 0; left: 0; right: 0;
-      height: 48px; 
-      padding: 0 25px;
-      background: rgba(0,0,0,0.9);
-      border-top: 2px solid currentColor;
+      height: 50px; 
+      padding: 0 28px;
+      background: rgba(0,0,0,0.95);
+      border-top: 3px solid currentColor;
       display: flex; 
       justify-content: space-between; 
       align-items: center;
-      font-size: 0.8rem; 
+      font-size: 0.82rem; 
       letter-spacing: 1px;
       z-index: 99999;
     }
   </style>
 </head>
 <body>
-  <!-- MATRIX BACKGROUND -->
+  <!-- MATRIX BACKGROUND (ahora detrás de todo) -->
   <canvas id="matrix"></canvas>
 
   <!-- TOPBAR -->
@@ -282,8 +288,8 @@ const canvas = document.getElementById('matrix');
 const ctx = canvas.getContext('2d');
 
 function resizeCanvas() {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
@@ -293,7 +299,7 @@ const fontSize = 14;
 let drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
 
 function drawMatrix() {
-  ctx.fillStyle = 'rgba(5,5,5,0.05)';
+  ctx.fillStyle = 'rgba(5,5,5,0.06)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#0f0';
   ctx.font = fontSize + 'px Courier New';
@@ -306,9 +312,9 @@ function drawMatrix() {
 }
 setInterval(drawMatrix, 50);
 
-// ====================== LISTA DE JUEGOS ======================
+// ====================== JUEGOS ======================
 let juegos = [
-    { nombre: "Ballistic", url: "https://ubg98.github.io/Ballistic/", categoria: "PLATAFORMAS" },
+  { nombre: "Ballistic", url: "https://ubg98.github.io/Ballistic/", categoria: "PLATAFORMAS" },
   { nombre: "Blumgi Slime", url: "https://ubg98.github.io/BlumgiSlime/", categoria: "PLATAFORMAS" },
   { nombre: "Fruit Ninja", url: "https://ubg98.github.io/FruitNinja/", categoria: "PUZZLE" },
   { nombre: "Save the Doge", url: "https://ubg98.github.io/SaveTheDoge/", categoria: "PUZZLE" },
@@ -428,7 +434,7 @@ const catBar = document.getElementById("catBar");
 const contenedor = document.getElementById("listaJuegos");
 const searchBar = document.getElementById("searchBar");
 
-// ====================== GENERAR CATEGORÍAS ======================
+// ====================== FUNCIONES ======================
 function generarCategorias() {
   catBar.innerHTML = "";
   let finalTags = [];
@@ -450,7 +456,6 @@ function generarCategorias() {
   });
 }
 
-// ====================== CREAR TARJETA ======================
 function crearTarjeta(juego) {
   const card = document.createElement("div");
   card.className = "game-card";
@@ -464,10 +469,8 @@ function crearTarjeta(juego) {
   return card;
 }
 
-// ====================== MOSTRAR JUEGOS ======================
 function mostrarJuegos(filtro = "", animate = true) {
   contenedor.innerHTML = "";
-
   const filtrados = juegos.filter(j => {
     const matchSearch = j.nombre.toLowerCase().includes(filtro.toLowerCase());
     const matchCat = currentCat === "ALL" ||
@@ -478,7 +481,7 @@ function mostrarJuegos(filtro = "", animate = true) {
   filtrados.forEach((juego, index) => {
     const card = crearTarjeta(juego);
     if (animate) {
-      card.style.animationDelay = (index * 30) + "ms";
+      card.style.animationDelay = (index * 35) + "ms";
       card.classList.add("animate");
     }
     contenedor.appendChild(card);
@@ -487,7 +490,6 @@ function mostrarJuegos(filtro = "", animate = true) {
   document.getElementById("counter").textContent = filtrados.length;
 }
 
-// ====================== FAVORITOS ======================
 function toggleFav(nombre, e) {
   e.stopPropagation();
   if (favoritos.includes(nombre)) {
@@ -500,30 +502,19 @@ function toggleFav(nombre, e) {
   mostrarJuegos(searchBar.value, false);
 }
 
-// ====================== ABRIR JUEGO ======================
 function abrirJuego(url) {
   const win = window.open("about:blank", "_blank");
   win.document.write(`
-    <html>
-      <head>
-        <title>ETHOS — GAME MODE</title>
-        <style>
-          html, body { margin:0; padding:0; background:#000; overflow:hidden; height:100%; width:100%; }
-          iframe { border:none; width:100vw; height:100vh; }
-        </style>
-      </head>
-      <body><iframe src="${url}" allowfullscreen></iframe></body>
-    </html>
+    <html><head><title>ETHOS — GAME MODE</title>
+    <style>html,body{margin:0;padding:0;background:#000;overflow:hidden;height:100%;width:100%;}iframe{border:none;width:100vw;height:100vh;}</style>
+    </head><body><iframe src="${url}" allowfullscreen></iframe></body></html>
   `);
   win.document.close();
 }
 
-// ====================== BUSCADOR ======================
-searchBar.addEventListener("input", () => {
-  mostrarJuegos(searchBar.value);
-});
+// ====================== EVENTOS ======================
+searchBar.addEventListener("input", () => mostrarJuegos(searchBar.value));
 
-// ====================== TEMAS ======================
 let themeIndex = 0;
 function cycleTheme() {
   document.body.classList.remove("theme-red", "theme-blue");
@@ -532,23 +523,16 @@ function cycleTheme() {
   if (themeIndex === 2) document.body.classList.add("theme-blue");
 }
 
-// ====================== BOTONES TOPBAR ======================
-function openEthosAI() {
-  window.open("https://ethos-ai.vercel.app", "_blank");
-}
-function openSpotify() {
-  window.open("https://open.spotify.com", "_blank");
-}
+function openEthosAI() { window.open("https://ethos-ai.vercel.app", "_blank"); }
+function openSpotify() { window.open("https://open.spotify.com", "_blank"); }
 
-// ====================== RELOJ ======================
 function updateClock() {
-  const now = new Date();
-  document.getElementById("clock").textContent = now.toLocaleTimeString("es-ES");
+  document.getElementById("clock").textContent = new Date().toLocaleTimeString("es-ES");
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// ====================== INICIALIZACIÓN ======================
+// ====================== INICIO ======================
 generarCategorias();
 mostrarJuegos();
 </script>
