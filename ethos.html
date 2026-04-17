@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETHOS TECHNOLOGIES V2.7</title>
+
+  <style>
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #050505; }
+    ::-webkit-scrollbar-thumb { background: #0f0; border: 1px solid #000; }
+    ::-webkit-scrollbar-thumb:hover { background: #00ff41; box-shadow: 0 0 10px #0f0; }
+
+    @keyframes matrixReveal {
+      0% {
+        opacity: 0;
+        transform: scaleX(0.9) translateY(10px);
+        clip-path: inset(0 50% 0 50%);
+        filter: brightness(5) blur(5px);
+      }
+      100% {
+        opacity: 1;
+        transform: scaleX(1) translateY(0);
+        clip-path: inset(0 0 0 0);
+        filter: brightness(1) blur(0);
+      }
+    }
+
+    body::before {
+      content: "";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background:
+        linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.1) 50%),
+        linear-gradient(90deg, rgba(255,0,0,0.01), rgba(0,255,0,0.01), rgba(0,0,255,0.01));
+      z-index: 9999;
+      background-size: 100% 3px, 3px 100%;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    body {
+      cursor: url('https://files.catbox.moe/9744ia.cur'), auto;
+      background: #050505;
+      color: #0f0;
+      font-family: 'Consolas', 'Courier New', monospace;
+      margin: 0;
+      padding: 80px 20px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    button, input, a,
+    *[onclick],
+    .btn, .button, .clickable,
+    .card, .game-card, .menu-item,
+    select, textarea,
+    label, summary,
+    [role="button"], [role="link"] {
+      cursor: url('https://files.catbox.moe/so5q1y.cur'), pointer !important;
+    }
+
+    #ethos-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 55px;
+      background: rgba(0,0,0,0.85);
+      border-bottom: 2px solid #0f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px;
+      z-index: 99999;
+      backdrop-filter: blur(4px);
+    }
+
+    .top-btn {
+      background: transparent;
+      border: 1px solid #0f0;
+      color: #0f0;
+      padding: 8px 18px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.25s;
+      text-transform: uppercase;
+      font-family: inherit;
+    }
+
+    .top-btn:hover {
+      background: #0f0;
+      color: #000;
+      box-shadow: 0 0 12px #0f0;
+    }
+
+    #matrix {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      letter-spacing: 5px;
+      border-bottom: 2px solid #0f0;
+      text-shadow: 0 0 10px #0f0;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .vpn-notice {
+      color: #ff4444;
+      font-size: 1.1rem;
+      margin-bottom: 28px;
+      text-shadow: 0 0 6px #ff0000;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .vpn-notice a {
+      color: #00ff41;
+      text-decoration: underline;
+      transition: all 0.2s;
+    }
+
+    .vpn-notice a:hover {
+      color: #ffffff;
+      text-shadow: 0 0 12px #0f0;
+    }
+
+    .search-wrapper {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      border: 1px solid #0f0;
+      padding: 12px 15px;
+      background: rgba(0,0,0,0.8);
+      box-shadow: inset 0 0 10px rgba(0,255,0,0.1);
+    }
+
+    #searchBar {
+      flex-grow: 1;
+      background: transparent;
+      border: none;
+      color: #0f0;
+      outline: none;
+      font-size: 1rem;
+      font-family: inherit;
+      width: 100%;
+    }
+
+    .categories {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cat-btn {
+      background: transparent;
+      border: 1px solid rgba(0,255,0,0.3);
+      color: rgba(0,255,0,0.6);
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+    }
+
+    .cat-btn:hover {
+      border-color: #0f0;
+      color: #0f0;
+      background: rgba(0,255,0,0.05);
+    }
+
+    .cat-btn.active {
+      border-color: #0f0;
+      color: #0f0;
+      background: rgba(0,255,0,0.2);
+      box-shadow: 0 0 15px rgba(0,255,0,0.3);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      width: 100%;
+      max-width: 1200px;
+      margin-bottom: 50px;
+    }
+
+    .game-card {
+      position: relative;
+      display: flex;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .game-card.animate {
+      animation: matrixReveal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .game-logo {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(0,255,0,0.3);
+      filter: brightness(0.85);
+      transition: 0.25s;
+    }
+
+    .btn-hacker:hover .game-logo {
+      filter: brightness(1.1);
+    }
+
+    .btn-hacker {
+      flex-grow: 1;
+      background: rgba(0,40,0,0.2);
+      border: 1px solid rgba(0,255,0,0.4);
+      color: #0f0;
+      padding: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: 0.3s;
+      text-align: left;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-family: inherit;
+    }
+
+    .btn-hacker:hover {
+      background: #0f0;
+      color: #000;
+      box-shadow: 0 0 20px rgba(0,255,0,0.6);
+      transform: translateY(-2px);
+    }
+
+    .fav-star {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: rgba(0,255,0,0.3);
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 5;
+      transition: 0.2s;
+    }
+
+    .fav-star:hover {
+      transform: translateY(-50%) scale(1.3);
+      color: #ff0;
+    }
+
+    .fav-star.active {
+      color: #ff0 !important;
+      text-shadow: 0 0 10px #ff0;
+    }
+
+    .status-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 45px;
+      padding: 0 20px;
+      background: rgba(0,0,0,0.85);
+      border-top: 2px solid #0f0;
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      color: #0f0;
+      z-index: 99999;
+    }
+  </style>
+</head>
+<body>
+  <div id="ethos-topbar">
+    <button class="top-btn" onclick="openEthosAI()">[ ETHOS_AI ]</button>
+    <button class="top-btn" onclick="openSpotify()">[ SPOTIFY ]</button>
+  </div>
+
+  <canvas id="matrix"></canvas>
+
+  <h1>[ ETHOS_SYSTEM ]</h1>
+
+  <div class="vpn-notice">
+    JUEGOS BLOQUEADOS? -
+    <a href="https://chromewebstore.google.com/detail/free-vpn-for-chrome-vpn-p/majdfhpaihoncoakbjgbdhglocklcgno?pli=1" target="_blank">
+      DESCARGAR FREEVPN
+    </a>
+  </div>
+
+  <div class="search-wrapper">
+    <div class="search-container">
+      <input type="text" id="searchBar" placeholder="SYSTEM SEARCH ..." autocomplete="off">
+    </div>
+  </div>
+
+  <div class="categories" id="catBar"></div>
+  <div class="grid" id="listaJuegos"></div>
+
+  <div class="status-bar">
+    <div>NÚMERO DE JUEGOS: <span id="counter">0</span></div>
+    <div><span id="clock">00:00:00</span></div>
+    <div>v.236</div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワラン0123456789@#$%^&*()';
+    const fontSize = 14;
+    let columns = Math.floor(canvas.width / fontSize);
+    let drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0f0';
+      ctx.font = fontSize + 'px Courier New';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 50);
+const juegosRaw = [
+  { nombre: "Ballistic", url: "https://ubg98.github.io/Ballistic/", tag: "PLATAFORMAS", logo: "https://example.com/logo-ballistic.png" },
+  { nombre: "Blumgi Slime", url: "https://ubg98.github.io/BlumgiSlime/", tag: "PLATAFORMAS", logo: "https://example.com/logo-blumgi-slime.png" },
+  { nombre: "Fruit Ninja", url: "https://ubg98.github.io/FruitNinja/", tag: "PUZZLE", logo: "https://example.com/logo-fruit-ninja.png" },
+  { nombre: "Save the Doge", url: "https://ubg98.github.io/SaveTheDoge/", tag: "PUZZLE", logo: "https://example.com/logo-save-the-doge.png" },
+  { nombre: "Shell Shockers", url: "https://mathlete.pages.dev/", tag: "ACCION", logo: "https://example.com/logo-shell-shockers.png" },
+  { nombre: "Football Strike", url: "https://ubg98.github.io/FootballStrike/", tag: "DEPORTES", logo: "https://example.com/logo-football-strike.png" },
+  { nombre: "Little Alchemy 2", url: "https://ubg98.github.io/LittleAlchemy2/", tag: "PUZZLE", logo: "https://example.com/logo-little-alchemy-2.png" },
+  { nombre: "Stick Merge", url: "https://ubg98.github.io/StickMerge2/", tag: "ACCION", logo: "https://example.com/logo-stick-merge.png" },
+  { nombre: "Supermario Wonder", url: "https://ubg98.github.io/SuperMarioWonder/", tag: "PLATAFORMAS", logo: "https://example.com/logo-supermario-wonder.png" },
+  { nombre: "Spacebar Clicker", url: "https://ubg98.github.io/SpaceBarClicker/", tag: "IDLE", logo: "https://example.com/logo-spacebar-clicker.png" },
+  { nombre: "Cookie Clicker 2", url: "https://ubg98.github.io/CookieClicker2/", tag: "IDLE", logo: "https://example.com/logo-cookie-clicker-2.png" },
+  { nombre: "Heads Arena", url: "https://ubg98.github.io/HeadsArenaSoccerAllStars/", tag: "DEPORTES", logo: "https://example.com/logo-heads-arena.png" },
+  { nombre: "Mr Bullet", url: "https://ubg98.github.io/MrBullet/", tag: "PUZZLE", logo: "https://example.com/logo-mr-bullet.png" },
+  { nombre: "Bloons TD", url: "https://bloonstowerdefense.io/", tag: "ESTRATEGIA", logo: "https://example.com/logo-bloons-td.png" },
+  { nombre: "Drive Mad", url: "https://ubg98.github.io/DriveMad/", tag: "MOTOR", logo: "https://example.com/logo-drive-mad.png" },
+  { nombre: "Little War", url: "https://www.littlewargame.com/", tag: "ESTRATEGIA", logo: "https://example.com/logo-little-war.png" },
+  { nombre: "Parking Fury 2", url: "https://ubg98.github.io/ParkingFury2/", tag: "MOTOR", logo: "https://example.com/logo-parking-fury-2.png" },
+  { nombre: "Parking Fury 3", url: "https://ubg98.github.io/ParkingFury3/", tag: "MOTOR", logo: "https://example.com/logo-parking-fury-3.png" },
+  { nombre: "OvO Dimensions", url: "https://freetoplayz.github.io/ovo-dimensions/", tag: "PLATAFORMAS", logo: "https://example.com/logo-ovo-dimensions.png" },
+  { nombre: "Plants vs Zombies", url: "https://turbowarp.org/807023495/embed", tag: "ESTRATEGIA", logo: "https://example.com/logo-plants-vs-zombies.png" },
+  { nombre: "Territorial.io", url: "https://territorial.io/", tag: "ESTRATEGIA", logo: "https://example.com/logo-territorial-io.png" },
+  { nombre: "Scary Wheels", url: "https://azgames.io/scary-wheels.embed", tag: "ACCION", logo: "https://example.com/logo-scary-wheels.png" },
+  { nombre: "Level Devil", url: "https://level-devil.io/level-devil.embed", tag: "ARCADE", logo: "https://example.com/logo-level-devil.png" },
+  { nombre: "RocketLeague 2D", url: "https://zz7nm.csb.app/", tag: "MOTOR", logo: "https://example.com/logo-rocketleague-2d.png" },
+  { nombre: "Traffic", url: "https://freezenova.com/db2/2022/unity/highway-traffic/pre.html", tag: "MOTOR", logo: "https://example.com/logo-traffic.png" },
+  { nombre: "GTA V", url: "https://spacewaves2.io/embed/gta-simulator", tag: "SIMULACION", logo: "https://example.com/logo-gta-v.png" },
+  { nombre: "Drift Kings", url: "https://www.onlinegames.io/games/2024/unity/drift-king/index.html", tag: "MOTOR", logo: "https://example.com/logo-drift-kings.png" },
+  { nombre: "Stack", url: "https://www.onlinegames.io/games/2021/unity/stack-fire-ball/index.html", tag: "ARCADE", logo: "https://example.com/logo-stack.png" },
+  { nombre: "Big Bubbles", url: "https://www.kodub.com/apps/bigbubbles", tag: "ARCADE", logo: "https://example.com/logo-big-bubbles.png" },
+  { nombre: "Ages of Conflict", url: "https://geet.in.net/get/ages-of-conflict/game.html", tag: "ESTRATEGIA", logo: "https://example.com/logo-ages-of-conflict.png" },
+  { nombre: "Buscaminas", url: "https://buscaminas.eu/", tag: "ARCADE", logo: "https://example.com/logo-buscaminas.png" },
+  { nombre: "Poke Aidle", url: "https://html-classic.itch.zone/html/16860709/dist/index.html?v=1773943543", tag: "ARCADE", logo: "https://example.com/logo-poke-aidle.png" },
+  { nombre: "Poppy Playtime 2", url: "https://playgama.com/export/game/poppy-playtime-chapter-2--huggy-wuggy?export_mode=portal#goog_rewarded", tag: "TERROR", logo: "https://example.com/logo-poppy-playtime-2.png" },
+  { nombre: "Aquapark", url: "https://geet.in.net/get/aquapark-slides/game.html", tag: "ARCADE", logo: "https://example.com/logo-aquapark.png" },
+  { nombre: "2048", url: "https://specials.manoramaonline.com/Mobile/2022/2048-game/index.html", tag: "PUZZLE", logo: "https://example.com/logo-2048.png" },
+  { nombre: "99 Nights Forest", url: "https://script.google.com/macros/s/AKfycbw4urIQgR3zAfmFsn3NWFC6kpsGYSWafyi6AWtyVNSyBkySH9O46LVnhej6fW7beFME/exec", tag: "AVENTURA", logo: "https://example.com/logo-99-nights-forest.png" },
+  { nombre: "Animal Craft", url: "https://gamea.azgame.io/animal-craft/", tag: "SIMULACION", logo: "https://example.com/logo-animal-craft.png" },
+  { nombre: "Aquapark (Idle)", url: "https://script.google.com/macros/s/AKfycbyMFmC4rSHnvW_Etgd0io14Q4bD4BnfEk9RHlCue81lueG4LbYq1MmU7ujp1SGvR5HX/exec", tag: "IDLE", logo: "https://example.com/logo-aquapark-idle.png" },
+  { nombre: "Backrooms (Free)", url: "https://geet.in.net/get/backrooms/game.html", tag: "TERROR", logo: "https://example.com/logo-backrooms-free.png" },
+  { nombre: "Basket Legends", url: "https://unblocked-games-786.github.io/Basketball-Legends-2020/", tag: "DEPORTES", logo: "https://example.com/logo-basket-legends.png" },
+  { nombre: "Basket Random", url: "https://legalizenuclearbombs5.github.io/games/Basket%20Random", tag: "DEPORTES", logo: "https://example.com/logo-basket-random.png" },
+  { nombre: "Bit Life", url: "https://legalizenuclearbombs5.github.io/games/bitlife", tag: "SIMULACION", logo: "https://example.com/logo-bit-life.png" },
+  { nombre: "Block Breaker", url: "https://brick-breaker.io/embed/block-breaker", tag: "ARCADE", logo: "https://example.com/logo-block-breaker.png" },
+  { nombre: "Bob the Robber 2", url: "https://legalizenuclearbombs5.github.io/games/bobtherobber2", tag: "ACCION", logo: "https://example.com/logo-bob-the-robber-2.png" },
+  { nombre: "Boxel Rebound", url: "https://trinculo54.github.io/Boxel-rebound-hope/Older", tag: "PLATAFORMAS", logo: "https://example.com/logo-boxel-rebound.png" },
+  { nombre: "Carrier Landing", url: "https://www.gamearter.com/game/fighter-aircraft-pilot/", tag: "MOTOR", logo: "https://example.com/logo-carrier-landing.png" },
+  { nombre: "Cars Arena", url: "https://gamesnacks.com/games/14q56300gkdl0", tag: "MOTOR", logo: "https://example.com/logo-cars-arena.png" },
+  { nombre: "Crazy Taxi", url: "https://gamea.azgame.io/crazy-taxi/", tag: "MOTOR", logo: "https://example.com/logo-crazy-taxi.png" },
+  { nombre: "Crazy4Speed", url: "https://games.s3.yandex.net/167367/bkkcaaw6gn99xniz1f0iapdbmhdjlnc3/index.html", tag: "MOTOR", logo: "https://example.com/logo-crazy4speed.png" },
+  { nombre: "Cuphead", url: "https://html-classic.itch.zone/html/14775576/cuphead/index.html", tag: "ACCION", logo: "https://example.com/logo-cuphead.png" },
+  { nombre: "Dig Out of Prison", url: "https://script.google.com/macros/s/AKfycby-5VSTOBeep9g9GU9un8CLFOo4TvTSmahbVEGqze-hX-iVmuLUtIyx6WAj2wvOYQeb/exec", tag: "PUZZLE", logo: "https://example.com/logo-dig-out-of-prison.png" },
+  { nombre: "Drift Hunters", url: "https://htmlxm.github.io/h/drift-hunters/", tag: "MOTOR", logo: "https://example.com/logo-drift-hunters.png" },
+  { nombre: "Escape Road City 2", url: "https://game.azgame.io/escape-road-city-2/", tag: "MOTOR", logo: "https://example.com/logo-escape-road-city-2.png" },
+  { nombre: "Extreme Pamplona", url: "https://www.juegosjuegos.com/embed/extreme-pamplona", tag: "ACCION", logo: "https://example.com/logo-extreme-pamplona.png" },
+  { nombre: "F1 Racer", url: "https://adogames.com/embed/3d-formula-racing/index.html", tag: "MOTOR", logo: "https://example.com/logo-f1-racer.png" },
+  { nombre: "Fireboy & Watergirl", url: "https://fireboyandwatergirlunblocked.github.io/", tag: "PUZZLE", logo: "https://example.com/logo-fireboy-watergirl.png" },
+  { nombre: "FNAF (Epstein)", url: "https://fivenightsatepsteins.org/fivenightsatepsteins-online/embed", tag: "TERROR", logo: "https://example.com/logo-fnaf-epstein.png" },
+  { nombre: "FNAF (Pedro)", url: "https://html-classic.itch.zone/html/15985212/index.html", tag: "TERROR", logo: "https://example.com/logo-fnaf-pedro.png" },
+  { nombre: "FNAF 1", url: "https://irv77.github.io/hd_fnaf/1", tag: "TERROR", logo: "https://example.com/logo-fnaf-1.png" },
+  { nombre: "FNAF 2", url: "https://irv77.github.io/hd_fnaf/2", tag: "TERROR", logo: "https://example.com/logo-fnaf-2.png" },
+  { nombre: "FNAF 3", url: "https://irv77.github.io/hd_fnaf/3", tag: "TERROR", logo: "https://example.com/logo-fnaf-3.png" },
+  { nombre: "FNAF 4", url: "https://irv77.github.io/hd_fnaf/4", tag: "TERROR", logo: "https://example.com/logo-fnaf-4.png" },
+  { nombre: "FNAF IMPOSIBLE", url: "https://turbowarp.org/1274214003/embed?autoplay=true&fps=60", tag: "TERROR", logo: "https://example.com/logo-fnaf-imposible.png" },
+  { nombre: "FNAF SL", url: "https://irv77.github.io/hd_fnaf/sl", tag: "TERROR", logo: "https://example.com/logo-fnaf-sl.png" },
+  { nombre: "FNAF UCN", url: "https://irv77.github.io/hd_fnaf/ucn", tag: "TERROR", logo: "https://example.com/logo-fnaf-ucn.png" },
+  { nombre: "Foso Cliker", url: "https://sigmacompanyoficial.github.io/Idle-Foso-Cliker/", tag: "IDLE", logo: "https://example.com/logo-foso-cliker.png" },
+  { nombre: "Geo Guesser", url: "https://www.openguessr.com", tag: "PUZZLE", logo: "https://example.com/logo-geo-guesser.png" },
+  { nombre: "Geometry Dash", url: "https://geometrydash-lite.io", tag: "PLATAFORMAS", logo: "https://example.com/logo-geometry-dash.png" },
+  { nombre: "Golf Puzzle", url: "https://gamea.azgame.io/golf-puzzle/", tag: "DEPORTES", logo: "https://example.com/logo-golf-puzzle.png" },
+  { nombre: "Google Snake", url: "https://googlesnake-online.github.io/file/", tag: "ARCADE", logo: "https://example.com/logo-google-snake.png" },
+  { nombre: "GoogooGaga Clicker", url: "https://gamea.azgame.io/goo-goo-gaga-clicker/", tag: "IDLE", logo: "https://example.com/logo-googoo-gaga-clicker.png" },
+  { nombre: "Gun Spin", url: "https://geet.in.net/get/gunspin/embed.html", tag: "ACCION", logo: "https://example.com/logo-gun-spin.png" },
+  { nombre: "Hacker Sim", url: "https://pranx.com/hacker/simulador/", tag: "SIMULACION", logo: "https://example.com/logo-hacker-sim.png" },
+  { nombre: "HeadSoccer 2022", url: "https://www.contezero.com/games/arcade/head-soccer-2022/play:full/", tag: "DEPORTES", logo: "https://example.com/logo-headsoccer-2022.png" },
+  { nombre: "HeadSoccer 2024", url: "https://azgames.io/head-soccer-2024.embed/", tag: "DEPORTES", logo: "https://example.com/logo-headsoccer-2024.png" },
+  { nombre: "HeadSoccer Halloween", url: "https://head-soccer.github.io/halloween-head-soccer/index.html", tag: "DEPORTES", logo: "https://example.com/logo-headsoccer-halloween.png" },
+  { nombre: "Iron Snout", url: "https://classroom8.github.io/iron-snout/", tag: "ACCION", logo: "https://example.com/logo-iron-snout.png" },
+  { nombre: "Knife Master", url: "https://gamea.azgame.io/knife-master/", tag: "ARCADE", logo: "https://example.com/logo-knife-master.png" },
+  { nombre: "Lostgamer", url: "https://lostgamer.io/guessr/maps", tag: "PUZZLE", logo: "https://example.com/logo-lostgamer.png" },
+  { nombre: "Mario", url: "https://supermarioplay.com/game/mario.html?v=1.0.1", tag: "PLATAFORMAS", logo: "https://example.com/logo-mario.png" },
+  { nombre: "Minecraft", url: "https://eaglercraft.q13x.com/1.8.8/js/", tag: "AVENTURA", logo: "https://example.com/logo-minecraft.png" },
+  { nombre: "Monkey Mart", url: "https://monkey-mart.gamestores.fun/", tag: "SIMULACION", logo: "https://example.com/logo-monkey-mart.png" },
+  { nombre: "MotoX3M", url: "https://moto-x3m.bitbucket.io/file/", tag: "MOTOR", logo: "https://example.com/logo-motox3m.png" },
+  { nombre: "Orbit Kick", url: "https://gamea.azgame.io/orbit-kick/", tag: "DEPORTES", logo: "https://example.com/logo-orbit-kick.png" },
+  { nombre: "PacMan", url: "https://arcader.org/game/", tag: "ARCADE", logo: "https://example.com/logo-pacman.png" },
+  { nombre: "Paper.io 2", url: "https://paperio2.gitlab.io/file", tag: "ARCADE", logo: "https://example.com/logo-paper-io-2.png" },
+  { nombre: "Papercraft", url: "https://turbowarp.org/10128407/embed?autoplay=true&fps=60/", tag: "AVENTURA", logo: "https://example.com/logo-papercraft.png" },
+  { nombre: "Planet Clicker", url: "https://planetclickerx.github.io/", tag: "IDLE", logo: "https://example.com/logo-planet-clicker.png" },
+  { nombre: "Pokémon (FV)", url: "https://ubg89.github.io/PokemonFireredVersion", tag: "ARCADE", logo: "https://example.com/logo-pokemon-fv.png" },
+  { nombre: "Pokémon (HG)", url: "https://classicjoy.games/embed?slug=pokemon-heartgold", tag: "ARCADE", logo: "https://example.com/logo-pokemon-hg.png" },
+  { nombre: "Pokémon (SV)", url: "https://classicjoy.games/embed?slug=pokemon-sapphire", tag: "ARCADE", logo: "https://example.com/logo-pokemon-sv.png" },
+  { nombre: "PolyTrack", url: "https://www.kodub.com/apps/polytrack/", tag: "MOTOR", logo: "https://example.com/logo-polytrack.png" },
+  { nombre: "Ragdoll Arena", url: "https://gamea.azgame.io/ragdoll-arena/", tag: "ACCION", logo: "https://example.com/logo-ragdoll-arena.png" },
+  { nombre: "Skip it!", url: "https://gamea.azgame.io/skip-it/", tag: "ARCADE", logo: "https://example.com/logo-skip-it.png" },
+  { nombre: "Slap Champions", url: "https://gamea.azgame.io/slap-champions/", tag: "ACCION", logo: "https://example.com/logo-slap-champions.png" },
+  { nombre: "Slope", url: "https://azgames.io/slope.embed/", tag: "PLATAFORMAS", logo: "https://example.com/logo-slope.png" },
+  { nombre: "Slow Roads", url: "https://hackingschoolwebsites.github.io/slowroads", tag: "MOTOR", logo: "https://example.com/logo-slow-roads.png" },
+  { nombre: "Smash Karts", url: "https://smashkarts.io/", tag: "MOTOR", logo: "https://example.com/logo-smash-karts.png" },
+  { nombre: "Sonic", url: "https://foxeh89.github.io/SonicAGES-web/", tag: "PLATAFORMAS", logo: "https://example.com/logo-sonic.png" },
+  { nombre: "Stickman Parkour", url: "https://script.google.com/macros/s/AKfycbwmHiH-ifVw054CFLpPM7qyZfLfwebB1KTGCqKzm0iJopITachomI745g6ttdHt2NZ6/exec", tag: "PLATAFORMAS", logo: "https://example.com/logo-stickman-parkour.png" },
+  { nombre: "Subway Surfers", url: "https://legalizenuclearbombs5.github.io/games/subway-surfers-ny", tag: "PLATAFORMAS", logo: "https://example.com/logo-subway-surfers.png" },
+  { nombre: "Superhot", url: "https://geet.in.net/get/superhot/game.html", tag: "ACCION", logo: "https://example.com/logo-superhot.png" },
+  { nombre: "Tap Road", url: "https://azgames.io/tap-road.embed", tag: "ARCADE", logo: "https://example.com/logo-tap-road.png" },
+  { nombre: "The Backrooms (Game)", url: "https://html-classic.itch.zone/html/7671420/index.html", tag: "TERROR", logo: "https://example.com/logo-the-backrooms-game.png" },
+  { nombre: "Tiny Fishing", url: "https://legalizenuclearbombs5.github.io/games/Tiny%20Fishing", tag: "DEPORTES", logo: "https://example.com/logo-tiny-fishing.png" },
+  { nombre: "Traffic Road", url: "https://azgames.io/traffic-road.embed", tag: "MOTOR", logo: "https://example.com/logo-traffic-road.png" },
+  { nombre: "Trineo 3D", url: "https://gamea.azgame.io/slope-rider-3d/", tag: "MOTOR", logo: "https://example.com/logo-trineo-3d.png" },
+  { nombre: "Undead Corridor", url: "https://gamea.azgame.io/undead-corridor/", tag: "TERROR", logo: "https://example.com/logo-undead-corridor.png" },
+  { nombre: "Venge.io", url: "https://venge.io/", tag: "ACCION", logo: "https://example.com/logo-venge-io.png" },
+  { nombre: "Vex4", url: "https://ubg98.github.io/Vex4/", tag: "PLATAFORMAS", logo: "https://example.com/logo-vex4.png" },
+  { nombre: "Tetris", url: "https://block-blast.io/block-blast.embed", tag: "ARCADE", logo: "https://example.com/logo-tetris.png" }
+];
+
+// Ordenar juegos alfabéticamente
+const juegos = juegosRaw.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+const contenedor = document.getElementById("listaJuegos");
+const searchBar = document.getElementById("searchBar");
+const catBar = document.getElementById("catBar");
+
+let currentCat = "ALL";
+let favoritos = JSON.parse(localStorage.getItem("ethos_favs")) || [];
+
+/* FAVORITOS */
+function toggleFav(nombre, e) {
+  e.stopPropagation();
+
+  favoritos = favoritos.includes(nombre)
+    ? favoritos.filter(f => f !== nombre)
+    : [...favoritos, nombre];
+
+  localStorage.setItem("ethos_favs", JSON.stringify(favoritos));
+
+  generarCategorias();
+  mostrarJuegos(searchBar.value, false);
+}
+
+/* CATEGORÍAS */
+function generarCategorias() {
+  catBar.innerHTML = "";
+  let finalTags = [];
+
+  const extraTags = [...new Set(juegos.map(j => j.tag))].sort();
+
+  if (favoritos.length > 0) finalTags.push("FAVS");
+
+  finalTags.push("ALL");
+  finalTags = [...finalTags, ...extraTags];
+
+  finalTags.forEach(tag => {
+    const btn = document.createElement("button");
+    btn.className = `cat-btn ${currentCat === tag ? "active" : ""}`;
+
+    btn.textContent =
+      tag === "FAVS" ? "* FAVORITOS" :
+      tag === "ALL" ? "SYSTEM_ALL" :
+      tag;
+
+    btn.onclick = () => {
+      currentCat = tag;
+      generarCategorias();
+      mostrarJuegos(searchBar.value);
+    };
+
+    catBar.appendChild(btn);
+  });
+}
+
+/* MOSTRAR JUEGOS */
+function mostrarJuegos(filtro = "", animate = true) {
+  contenedor.innerHTML = "";
+
+  const filtrados = juegos.filter(j => {
+    const matchSearch = j.nombre.toLowerCase().includes(filtro.toLowerCase());
+    const matchCat =
+      currentCat === "ALL" ||
+      (currentCat === "FAVS"
+        ? favoritos.includes(j.nombre)
+        : j.tag === currentCat);
+
+    return matchSearch && matchCat;
+  });
+
+  filtrados.forEach((juego, index) => {
+    const div = document.createElement("div");
+    div.className = "game-card" + (animate ? " animate" : "");
+
+    if (animate) {
+      div.style.animationDelay = `${Math.min(index * 0.03, 1.2)}s`;
+    } else {
+      div.style.opacity = "1";
+    }
+
+    div.innerHTML = `
+      <button class="btn-hacker" onclick="abrirJuego('${juego.url}')">
+        <img src="${juego.logo}" class="game-logo"
+             onerror="this.src='https://i.imgur.com/3g7nmJC.png'">
+        <span>> ${juego.nombre}</span>
+      </button>
+
+      <button class="fav-star ${favoritos.includes(juego.nombre) ? "active" : ""}"
+        onclick="toggleFav('${juego.nombre}', event)">
+        ${favoritos.includes(juego.nombre) ? "★" : "☆"}
+      </button>
+    `;
+
+    contenedor.appendChild(div);
+  });
+
+  document.getElementById("counter").textContent = filtrados.length;
+}
+
+/* ABRIR JUEGO */
+function abrirJuego(url) {
+  const win = window.open("about:blank", "_blank");
+  const content = `
+    <html>
+    <head>
+      <title>ETHOS_SYSTEM</title>
+      <style>
+        body, html { margin:0; padding:0; height:100vh; overflow:hidden; background:#000; }
+        iframe { border:0; width:100%; height:100%; }
+      </style>
+    </head>
+    <body>
+      <iframe src="${url.trim()}" allowfullscreen></iframe>
+    </body>
+    </html>
+  `;
+  win.document.write(content);
+  win.document.close();
+}
+
+/* ETHOS_AI */
+function openEthosAI() {
+  window.open(
+    "https://script.google.com/macros/s/AKfycbw9TPeZki-pAXzV_S3_OHvpP9fC-5k9yU-UVNfJVSGVor3ls6IvcYvkDGKJg-FH_nwl/exec",
+    "_blank"
+  );
+}
+
+/* SPOTIFY */
+function openSpotify() {
+  window.open(
+    "https://open.spotify.com/embed/playlist/4L7KXkQeIQpxWNdXMfBVSM?utm_source=generator&theme=0",
+    "_blank"
+  );
+}
+
+/* RELOJ */
+setInterval(() => {
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString();
+}, 1000);
+
+/* BUSCADOR */
+searchBar.addEventListener("input", e => {
+  mostrarJuegos(e.target.value);
+});
+
+/* INICIALIZACIÓN */
+generarCategorias();
+mostrarJuegos();
+
+/* EASTER EGG */
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "n") {
+    document.body.classList.toggle("nocturne");
+  }
+});
+</script>
+
+</body>
+</html>
+
