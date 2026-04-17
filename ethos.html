@@ -12,32 +12,8 @@
     ::-webkit-scrollbar-thumb:hover { background: #00ff41; box-shadow: 0 0 10px #0f0; }
 
     @keyframes matrixReveal {
-      0% {
-        opacity: 0;
-        transform: scaleX(0.9) translateY(10px);
-        clip-path: inset(0 50% 0 50%);
-        filter: brightness(5) blur(5px);
-      }
-      100% {
-        opacity: 1;
-        transform: scaleX(1) translateY(0);
-        clip-path: inset(0 0 0 0);
-        filter: brightness(1) blur(0);
-      }
-    }
-
-    body::before {
-      content: "";
-      display: block;
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background:
-        linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.1) 50%),
-        linear-gradient(90deg, rgba(255,0,0,0.01), rgba(0,255,0,0.01), rgba(0,0,255,0.01));
-      z-index: 9999;
-      background-size: 100% 3px, 3px 100%;
-      pointer-events: none;
-      opacity: 0.4;
+      0% { opacity: 0; transform: scaleX(0.9) translateY(10px); clip-path: inset(0 50% 0 50%); filter: brightness(5) blur(5px); }
+      100% { opacity: 1; transform: scaleX(1) translateY(0); clip-path: inset(0 0 0 0); filter: brightness(1) blur(0); }
     }
 
     body {
@@ -56,31 +32,15 @@
       transition: filter 0.3s ease;
     }
 
-    /* TEMES */
     body.theme-red { filter: hue-rotate(120deg); }
     body.theme-blue { filter: hue-rotate(220deg); }
 
-    button, input, a,
-    *[onclick],
-    .btn, .button, .clickable,
-    .card, .game-card, .menu-item,
-    select, textarea,
-    label, summary,
-    [role="button"], [role="link"] {
-      cursor: url('https://files.catbox.moe/so5q1y.cur'), pointer !important;
-    }
-
     #ethos-topbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      position: fixed; top: 0; left: 0; right: 0;
       height: 55px;
       background: rgba(0,0,0,0.85);
       border-bottom: 2px solid #0f0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 12px;
       padding: 0 20px;
       z-index: 99999;
       backdrop-filter: blur(4px);
@@ -94,26 +54,16 @@
       font-size: 0.9rem;
       transition: 0.25s;
       text-transform: uppercase;
-      font-family: inherit;
     }
-
-    .top-btn:hover {
-      background: #0f0;
-      color: #000;
-      box-shadow: 0 0 12px #0f0;
-    }
+    .top-btn:hover { background: #0f0; color: #000; box-shadow: 0 0 12px #0f0; }
 
     #matrix {
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      opacity: 0.3;
+      position: fixed; inset: 0; z-index: -2;
+      pointer-events: none; opacity: 0.3;
     }
 
     h1 {
-      font-size: 2.2rem;
-      letter-spacing: 5px;
+      font-size: 2.2rem; letter-spacing: 5px;
       border-bottom: 2px solid #0f0;
       text-shadow: 0 0 10px #0f0;
       margin-bottom: 8px;
@@ -121,164 +71,75 @@
     }
 
     .vpn-notice {
-      color: #ff4444;
-      font-size: 1.1rem;
+      color: #ff4444; font-size: 1.1rem;
       margin-bottom: 28px;
       text-shadow: 0 0 6px #ff0000;
-      letter-spacing: 1px;
-      text-align: center;
+      letter-spacing: 1px; text-align: center;
     }
 
-    .vpn-notice a {
-      color: #00ff41;
-      text-decoration: underline;
-      transition: all 0.2s;
-    }
-
-    .vpn-notice a:hover {
-      color: #ffffff;
-      text-shadow: 0 0 12px #0f0;
-    }
-
-    .search-wrapper {
-      width: 100%;
-      max-width: 600px;
-      margin-bottom: 20px;
-    }
-
+    .search-wrapper { width: 100%; max-width: 600px; margin-bottom: 20px; }
     .search-container {
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       border: 1px solid #0f0;
       padding: 12px 15px;
       background: rgba(0,0,0,0.8);
       box-shadow: inset 0 0 10px rgba(0,255,0,0.1);
     }
-
     #searchBar {
-      flex-grow: 1;
-      background: transparent;
-      border: none;
-      color: #0f0;
-      outline: none;
-      font-size: 1rem;
-      font-family: inherit;
-      width: 100%;
+      flex-grow: 1; background: transparent; border: none;
+      color: #0f0; outline: none; font-size: 1rem;
     }
 
     .categories {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: flex; gap: 8px; margin-bottom: 30px;
+      flex-wrap: wrap; justify-content: center;
     }
 
     .cat-btn {
       background: transparent;
       border: 1px solid rgba(0,255,0,0.3);
       color: rgba(0,255,0,0.6);
-      padding: 6px 14px;
-      font-size: 0.75rem;
-      transition: all 0.3s;
-      text-transform: uppercase;
+      padding: 6px 14px; font-size: 0.75rem;
+      transition: 0.3s; text-transform: uppercase;
     }
+    .cat-btn:hover { border-color: #0f0; color: #0f0; background: rgba(0,255,0,0.05); }
+    .cat-btn.active { border-color: #0f0; color: #0f0; background: rgba(0,255,0,0.2); box-shadow: 0 0 15px rgba(0,255,0,0.3); }
 
-    .cat-btn:hover {
-      border-color: #0f0;
-      color: #0f0;
-      background: rgba(0,255,0,0.05);
-    }
-
-    .cat-btn.active {
-      border-color: #0f0;
-      color: #0f0;
-      background: rgba(0,255,0,0.2);
-      box-shadow: 0 0 15px rgba(0,255,0,0.3);
-    }
-
-    /* GAME CARD */
-    .game-card {
-      position: relative;
-      display: flex;
-      opacity: 0;
-      will-change: transform, opacity;
-    }
-
-    .game-card.animate {
-      animation: matrixReveal 0.4s ease forwards;
-    }
+    .game-card { position: relative; display: flex; opacity: 0; }
+    .game-card.animate { animation: matrixReveal 0.4s ease forwards; }
 
     .game-logo {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      margin-bottom: 8px;
-      border-bottom: 1px solid rgba(0,255,0,0.3);
-      filter: brightness(0.85);
-      transition: 0.25s;
-    }
-
-    .btn-hacker:hover .game-logo {
-      filter: brightness(1.1);
+      width: 100%; height: 120px; object-fit: cover;
+      margin-bottom: 8px; border-bottom: 1px solid rgba(0,255,0,0.3);
+      filter: brightness(0.85); transition: 0.25s;
     }
 
     .btn-hacker {
-      flex-grow: 1;
-      background: rgba(0,40,0,0.2);
+      flex-grow: 1; background: rgba(0,40,0,0.2);
       border: 1px solid rgba(0,255,0,0.4);
-      color: #0f0;
-      padding: 14px;
-      font-weight: bold;
-      text-transform: uppercase;
-      transition: 0.3s;
-      text-align: left;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      font-family: inherit;
+      color: #0f0; padding: 14px;
+      font-weight: bold; text-transform: uppercase;
+      transition: 0.3s; text-align: left;
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
     }
-
-    .btn-hacker:hover {
-      background: #0f0;
-      color: #000;
-      box-shadow: 0 0 20px rgba(0,255,0,0.6);
-      transform: translateY(-2px);
-    }
+    .btn-hacker:hover { background: #0f0; color: #000; box-shadow: 0 0 20px rgba(0,255,0,0.6); transform: translateY(-2px); }
 
     .fav-star {
-      position: absolute;
-      right: 8px;
-      top: 50%;
+      position: absolute; right: 8px; top: 50%;
       transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      color: rgba(0,255,0,0.3);
-      font-size: 1.2rem;
+      background: transparent; border: none;
+      color: rgba(0,255,0,0.3); font-size: 1.2rem;
       transition: 0.2s;
     }
-
-    .fav-star.active {
-      color: #ff0;
-      text-shadow: 0 0 10px #ff0;
-    }
+    .fav-star.active { color: #ff0; text-shadow: 0 0 10px #ff0; }
 
     .status-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 45px;
-      padding: 0 20px;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 45px; padding: 0 20px;
       background: rgba(0,0,0,0.85);
       border-top: 2px solid #0f0;
-      backdrop-filter: blur(4px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.75rem;
-      letter-spacing: 1px;
-      color: #0f0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; letter-spacing: 1px;
       z-index: 99999;
     }
   </style>
@@ -286,30 +147,8 @@
 
 <body>
 
-  <!-- MATRIX -->
   <canvas id="matrix"></canvas>
 
-  <!-- LOGIN -->
-  <div id="loginScreen" style="
-    display:none; position:absolute; inset:0;
-    z-index:10; background:rgba(0,0,0,0.55);
-    flex-direction:column; justify-content:center; align-items:center;
-  ">
-    <div id="terminalBox" class="terminal">
-      <div class="fakeInput" id="fakeInput">
-        <span id="fakeText" class="fakeInputText"></span>
-        <span id="cursor" class="cursor">█</span>
-      </div>
-      <input id="realInput" type="password" autocomplete="off">
-    </div>
-
-    <div id="alertBox"></div>
-    <div id="lockMessage"></div>
-    <div id="accessDeniedBig">ACCESS DENIED</div>
-    <div id="accessGranted">ACCESS GRANTED</div>
-  </div>
-
-  <!-- TOPBAR -->
   <div id="ethos-topbar">
     <button class="top-btn" onclick="openEthosAI()">[ ETHOS_AI ]</button>
     <button class="top-btn" onclick="openSpotify()">[ SPOTIFY ]</button>
@@ -320,25 +159,21 @@
 
   <div class="vpn-notice">
     JUEGOS BLOQUEADOS? —
-    <a href="https://chromewebstore.google.com/detail/free-vpn-for-chrome-vpn-p/majdfhpaihoncoakbjgbdhglocklcgno?pli=1" target="_blank">
+    <a href="https://chromewebstore.google.com/detail/free-vpn-for-chrome-vpn-p/majdfhpaihoncoakbjgbdhglocklcgno" target="_blank">
       DESCARGAR FREEVPN
     </a>
   </div>
 
-  <!-- SEARCH -->
   <div class="search-wrapper">
     <div class="search-container">
       <input type="text" id="searchBar" placeholder="SYSTEM SEARCH ..." autocomplete="off">
     </div>
   </div>
 
-  <!-- CATEGORIES -->
   <div class="categories" id="catBar"></div>
 
-  <!-- GRID -->
   <div class="grid" id="listaJuegos"></div>
 
-  <!-- STATUS -->
   <div class="status-bar">
     <div>NÚMERO DE JUEGOS: <span id="counter">0</span></div>
     <div><span id="clock">00:00:00</span></div>
@@ -379,9 +214,8 @@ function drawMatrix() {
 }
 setInterval(drawMatrix, 50);
 
-
-/* LISTA DE JUEGOS (BUIT) */
-const juegosRaw = [];
+/* JUEGOS */
+let juegosRaw = [];  
 const juegosRaw = [setInterval(drawMatrix, 50);
   { nombre: "Ballistic", url: "https://ubg98.github.io/Ballistic/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-ballistic.png" },
   { nombre: "Blumgi Slime", url: "https://ubg98.github.io/BlumgiSlime/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-blumgi-slime.png" },
@@ -495,13 +329,20 @@ const juegosRaw = [setInterval(drawMatrix, 50);
   { nombre: "Vex4", url: "https://ubg98.github.io/Vex4/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-vex4.png" },
   { nombre: "Tetris", url: "https://block-blast.io/block-blast.embed", categoria: "ARCADE", logo: "https://example.com/logo-tetris.png" }
     
-const juegos = juegosRaw;
+];
+
+
+
+  let juegos = juegosRaw;
+
+let favoritos = JSON.parse(localStorage.getItem("ethos_favs")) || [];
+let currentCat = "ALL";
+
+const catBar = document.getElementById("catBar");
+const contenedor = document.getElementById("listaJuegos");
+const searchBar = document.getElementById("searchBar");
 
 /* CATEGORIES */
-const catBar = document.getElementById("catBar");
-let currentCat = "ALL";
-let favoritos = JSON.parse(localStorage.getItem("ethos_favs")) || [];
-
 function generarCategorias() {
   catBar.innerHTML = "";
   let finalTags = [];
@@ -531,9 +372,6 @@ function generarCategorias() {
 }
 
 /* MOSTRAR JUEGOS */
-const contenedor = document.getElementById("listaJuegos");
-const searchBar = document.getElementById("searchBar");
-
 function mostrarJuegos(filtro = "", animate = true) {
   contenedor.innerHTML = "";
 
@@ -588,4 +426,46 @@ function toggleFav(nombre, e) {
 
 /* ABRIR JUEGO */
 function abrirJuego(url) {
-  const win =
+  window.open(url, "_blank");
+}
+
+/* BUSCADOR */
+searchBar.addEventListener("input", () => {
+  mostrarJuegos(searchBar.value);
+});
+
+/* THEME */
+let themeIndex = 0;
+function cycleTheme() {
+  document.body.classList.remove("theme-red", "theme-blue");
+
+  themeIndex = (themeIndex + 1) % 3;
+
+  if (themeIndex === 1) document.body.classList.add("theme-red");
+  if (themeIndex === 2) document.body.classList.add("theme-blue");
+}
+
+/* BOTONES TOPBAR */
+function openEthosAI() {
+  window.open("https://ethos-ai.vercel.app", "_blank");
+}
+function openSpotify() {
+  window.open("https://open.spotify.com", "_blank");
+}
+
+/* CLOCK */
+function updateClock() {
+  const now = new Date();
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString("es-ES");
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* INICIALIZACIÓN */
+generarCategorias();
+mostrarJuegos();
+</script>
+
+</body>
+</html>
