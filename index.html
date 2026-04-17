@@ -14,28 +14,38 @@
   max-width: 1200px;
 }
   
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #050505; }
-    ::-webkit-scrollbar-thumb { background: #0f0; border: 1px solid #000; }
-    ::-webkit-scrollbar-thumb:hover { background: #00ff41; box-shadow: 0 0 10px #0f0; }
-   
-    body.theme-red::-webkit-scrollbar-thumb {
-  background: #f00;
-  border-color: #600;
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #050505; }
+
+/* BASE — VERD NEON */
+::-webkit-scrollbar-thumb {
+  background: #00ff00;
+  border: 1px solid #003300;
+  filter: none !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #33ff33;
+  box-shadow: 0 0 10px #0f0;
+}
+/* TEMA VERMELL */
+body.theme-red::-webkit-scrollbar-thumb {
+  background: #ff0000;
+  border-color: #660000;
 }
 body.theme-red::-webkit-scrollbar-thumb:hover {
-  background: #ff4444;
+  background: #ff3333;
 }
-
+/* TEMA BLAU */
 body.theme-blue::-webkit-scrollbar-thumb {
-  background: #00aaff;
+  background: #009dff;
   border-color: #004466;
 }
 body.theme-blue::-webkit-scrollbar-thumb:hover {
-  background: #33ccff;
+  background: #33cfff;
 }
 
-
+    
+    
     @keyframes matrixReveal {
       0% { opacity: 0; transform: scaleX(0.9) translateY(10px); clip-path: inset(0 50% 0 50%); filter: brightness(5) blur(5px); }
       100% { opacity: 1; transform: scaleX(1) translateY(0); clip-path: inset(0 0 0 0); filter: brightness(1) blur(0); }
