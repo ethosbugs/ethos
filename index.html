@@ -305,9 +305,11 @@
     const ctx = canvas.getContext('2d');
 
     function resizeCanvas() {
-      canvas.width = innerWidth;
-      canvas.height = innerHeight;
-    }
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  drops = Array(Math.floor(canvas.width / fontSize)).fill(1); // ← recalcular sempre
+}
+
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
