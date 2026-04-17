@@ -557,18 +557,25 @@ function mostrarJuegos(filtro = "", animate = true) {
       div.style.opacity = "1";
     }
 
-    div.innerHTML = `
-      <button class="btn-hacker" onclick="abrirJuego('${juego.url}')">
-        <img src="${juego.logo}" class="game-logo"
-             onerror="this.src='https://i.imgur.com/3g7nmJC.png'">
-        <span>> ${juego.nombre}</span>
-      </button>
+  div.innerHTML = `
+    <div class="game-card">
+        <img src="${juego.logo}" class="game-logo">
 
-      <button class="fav-star ${favoritos.includes(juego.nombre) ? "active" : ""}"
-        onclick="toggleFav('${juego.nombre}', event)">
-        ${favoritos.includes(juego.nombre) ? "★" : "☆"}
-      </button>
-    `;
+        <div class="game-info">
+            <span class="game-name">${juego.nombre}</span>
+        </div>
+
+        <button class="fav-star ${favoritos.includes(juego.nombre) ? 'active' : ''}"
+            onclick="toggleFav('${juego.nombre}', event)">
+            ${favoritos.includes(juego.nombre) ? '★' : '☆'}
+        </button>
+
+        <button class="play-btn" onclick="abrirJuego('${juego.url}')">
+            PLAY
+        </button>
+    </div>
+
+  `;
 
     contenedor.appendChild(div);
   });
