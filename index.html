@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ETHOS TECHNOLOGIES V4.2</title>
+  <title>Ethos Technologies</title>
 
   <style>
     /* ============================
@@ -202,53 +202,7 @@
       border-width: 2px;
       background: rgba(0,0,0,0.8);
     }
-
-    /* ============================
-          GAME CARDS
-    ============================ */
-    .game-card {
-      position: relative;
-      display: flex;
-      opacity: 1;
-    }
-
-    .game-card.animate {
-      animation: matrixReveal 0.4s ease forwards;
-    }
-
-    .btn-hacker {
-      flex-grow: 1;
-      background: transparent;
-      border: 1px solid currentColor;
-      color: currentColor;
-      padding: 16px 20px;
-      font-weight: bold;
-      text-transform: uppercase;
-      transition: 0.25s ease;
-      text-align: left;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      cursor: pointer;
-      font-size: 1.02rem;
-    }
-
-    .btn-hacker:hover {
-      opacity: 1;
-      box-shadow: 0 0 14px currentColor;
-      transform: scale(0.96);
-    }
-
-    .fav-star {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      background: transparent; border: none;
-      color: currentColor; font-size: 1.5rem;
-      opacity: 0.7; cursor: pointer;
-      transition: 0.25s ease;
-    }
-
-    .fav-star:hover { opacity: 1; transform: translateY(-50%) scale(1.25); }
-    .fav-star.active { color: #ffff00; text-shadow: 0 0 12px #ffff00; }
+<link rel="icon" type="image/png" href="https://i.imgur.com/3G3ZQhC.png">
 
     /* ============================
           STATUS BAR
@@ -344,10 +298,38 @@
     setInterval(drawMatrix, 50);
 
     /* ============================
+          THEME MEMORY
+    ============================ */
+    let themeIndex = 0;
+
+    const savedTheme = localStorage.getItem("ethos_theme");
+    if (savedTheme !== null) {
+      themeIndex = parseInt(savedTheme);
+      if (themeIndex === 1) document.body.classList.add("theme-red");
+      if (themeIndex === 2) document.body.classList.add("theme-blue");
+    }
+
+    function cycleTheme() {
+      document.body.classList.remove("theme-red", "theme-blue");
+
+      themeIndex = (themeIndex + 1) % 3;
+
+      if (themeIndex === 1) document.body.classList.add("theme-red");
+      if (themeIndex === 2) document.body.classList.add("theme-blue");
+
+      localStorage.setItem("ethos_theme", themeIndex);
+
+      const flash = document.createElement("div");
+      flash.className = "theme-transition";
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 300);
+    }
+
+    /* ============================
           VARIABLES BASE
     ============================ */
     let juegos = [
-  { nombre: "Ballistic", url: "https://ubg98.github.io/Ballistic/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-ballistic.png" },
+      { nombre: "Ballistic", url: "https://ubg98.github.io/Ballistic/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-ballistic.png" },
   { nombre: "Blumgi Slime", url: "https://ubg98.github.io/BlumgiSlime/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-blumgi-slime.png" },
   { nombre: "Fruit Ninja", url: "https://ubg98.github.io/FruitNinja/", categoria: "PUZZLE", logo: "https://example.com/logo-fruit-ninja.png" },
   { nombre: "Save the Doge", url: "https://ubg98.github.io/SaveTheDoge/", categoria: "PUZZLE", logo: "https://example.com/logo-save-the-doge.png" },
@@ -457,7 +439,8 @@
   { nombre: "Undead Corridor", url: "https://gamea.azgame.io/undead-corridor/", categoria: "TERROR", logo: "https://example.com/logo-undead-corridor.png" },
   { nombre: "Venge.io", url: "https://venge.io/", categoria: "ACCION", logo: "https://example.com/logo-venge-io.png" },
   { nombre: "Vex4", url: "https://ubg98.github.io/Vex4/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-vex4.png" },
-  { nombre: "Tetris", url: "https://block-blast.io/block-blast.embed", categoria: "ARCADE", logo: "https://example.com/logo-tetris.png" }    ];
+  { nombre: "Tetris", url: "https://block-blast.io/block-blast.embed", categoria: "ARCADE", logo: "https://example.com/logo-tetris.png" }
+    ];
 
     let favoritos = JSON.parse(localStorage.getItem("ethos_favs")) || [];
     let currentCat = "ALL";
@@ -466,14 +449,7 @@
     const contenedor = document.getElementById("listaJuegos");
     const searchBar = document.getElementById("searchBar");
 
-    /* ============================
-          GENERAR CATEGORÍAS
-    ============================ */
     function generarCategorias() {
-      if (currentCat === "FAVS" && favoritos.length === 0) {
-        currentCat = "ALL";
-      }
-
       catBar.innerHTML = "";
       let finalTags = [];
 
@@ -504,18 +480,8 @@
       });
     }
 
-    /* ============================
-          MOSTRAR JUEGOS
-    ============================ */
     function mostrarJuegos(filtro = "", animate = true) {
       contenedor.innerHTML = "";
-
-      const visibles = Array.from(document.querySelectorAll(".cat-btn"))
-                            .map(btn => btn.dataset.cat);
-
-      if (!visibles.includes(currentCat)) {
-        currentCat = "ALL";
-      }
 
       let filtrados = juegos.filter(j => {
         const matchSearch = j.nombre.toLowerCase().includes(filtro.toLowerCase());
@@ -536,11 +502,10 @@
         div.style.animationDelay = `${Math.min(index * 0.03, 1.2)}s`;
 
         div.innerHTML = `
-          <button class="btn-hacker" onclick="abrirJuego('${juego.url}')">
+          <button class="btn-hacker">
             > ${juego.nombre}
           </button>
-          <button class="fav-star ${favoritos.includes(juego.nombre) ? "active" : ""}"
-                  onclick="toggleFav('${juego.nombre}', event)">
+          <button class="fav-star ${favoritos.includes(juego.nombre) ? "active" : ""}">
             ★
           </button>
         `;
@@ -552,79 +517,14 @@
     }
 
     /* ============================
-          FAVORITOS
+          CLOCK
     ============================ */
-    function toggleFav(nombre, e) {
-      e.stopPropagation();
-
-      if (favoritos.includes(nombre)) {
-        favoritos = favoritos.filter(f => f !== nombre);
-      } else {
-        favoritos.push(nombre);
-      }
-
-      localStorage.setItem("ethos_favs", JSON.stringify(favoritos));
-
-      mostrarJuegos(searchBar.value, false);
+    function updateClock() {
+      document.getElementById("clock").textContent =
+        new Date().toLocaleTimeString("es-ES");
     }
-
-    /* ============================
-          ABRIR JUEGO
-    ============================ */
-    function abrirJuego(url) {
-      const win = window.open("about:blank", "_blank");
-
-      win.document.write(`
-        <html>
-          <head>
-            <title>ETHOS — GAME MODE</title>
-            <style>
-              html, body {
-                margin: 0; padding: 0;
-                background: #000;
-                overflow: hidden;
-                height: 100%; width: 100%;
-              }
-              iframe {
-                border: none;
-                width: 100vw; height: 100vh;
-              }
-            </style>
-          </head>
-          <body>
-            <iframe src="${url}" allowfullscreen></iframe>
-          </body>
-        </html>
-      `);
-
-      win.document.close();
-    }
-
-    /* ============================
-          BUSCADOR
-    ============================ */
-    searchBar.addEventListener("input", () => {
-      mostrarJuegos(searchBar.value);
-    });
-
-    /* ============================
-          TEMES
-    ============================ */
-    let themeIndex = 0;
-
-    function cycleTheme() {
-      document.body.classList.remove("theme-red", "theme-blue");
-
-      themeIndex = (themeIndex + 1) % 3;
-
-      if (themeIndex === 1) document.body.classList.add("theme-red");
-      if (themeIndex === 2) document.body.classList.add("theme-blue");
-
-      const flash = document.createElement("div");
-      flash.className = "theme-transition";
-      document.body.appendChild(flash);
-      setTimeout(() => flash.remove(), 300);
-    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
     /* ============================
           TOPBAR BUTTONS
@@ -634,18 +534,8 @@
     }
 
     function openSpotify() {
-      window.open("https://open.spotify.com/embed/playlist/4L7KXkQeIQpxWNdXMfBVSM?utm_source=generator&theme=0", "_blank");
+      window.open("https://open.spotify.com", "_blank");
     }
-
-    /* ============================
-          CLOCK
-    ============================ */
-    function updateClock() {
-      document.getElementById("clock").textContent =
-        new Date().toLocaleTimeString("es-ES");
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
 
     /* ============================
           INIT
