@@ -164,7 +164,7 @@
     }
 
     /* ============================
-          GAME CARDS (SENSE ANIMACIÓ)
+          GAME CARDS
     ============================ */
     .game-card {
       position: relative;
@@ -322,6 +322,26 @@
     }
 
     /* ============================
+          FUNCIONS JOCS
+    ============================ */
+    function abrirJuego(url) {
+      if (!url) return;
+      window.open(url, "_blank");
+    }
+
+    function toggleFav(nombre, ev) {
+      ev.stopPropagation();
+      const idx = favoritos.indexOf(nombre);
+      if (idx === -1) {
+        favoritos.push(nombre);
+      } else {
+        favoritos.splice(idx, 1);
+      }
+      localStorage.setItem("ethos_favs", JSON.stringify(favoritos));
+      mostrarJuegos(document.getElementById("searchBar").value, false);
+    }
+
+    /* ============================
           VARIABLES BASE
     ============================ */
     let juegos = [
@@ -436,7 +456,7 @@
   { nombre: "Venge.io", url: "https://venge.io/", categoria: "ACCION", logo: "https://example.com/logo-venge-io.png" },
   { nombre: "Vex4", url: "https://ubg98.github.io/Vex4/", categoria: "PLATAFORMAS", logo: "https://example.com/logo-vex4.png" },
   { nombre: "Tetris", url: "https://block-blast.io/block-blast.embed", categoria: "ARCADE", logo: "https://example.com/logo-tetris.png" }
-    ]; 
+    ];
 
     let favoritos = JSON.parse(localStorage.getItem("ethos_favs")) || [];
     let currentCat = "ALL";
@@ -469,14 +489,14 @@
         btn.onclick = (e) => {
           currentCat = e.target.dataset.cat;
           generarCategorias();
-          mostrarJuegos(searchBar.value);
+          mostrarJuegos(searchBar.value, false);
         };
 
         catBar.appendChild(btn);
       });
     }
 
-    function mostrarJuegos(filtro = "", animate = true) {
+    function mostrarJuegos(filtro = "", animate = false) {
       contenedor.innerHTML = "";
 
       let filtrados = juegos.filter(j => {
@@ -492,15 +512,16 @@
 
       filtrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-      filtrados.forEach((juego, index) => {
+      filtrados.forEach((juego) => {
         const div = document.createElement("div");
         div.className = "game-card";
 
         div.innerHTML = `
-          <button class="btn-hacker">
+          <button class="btn-hacker" onclick="abrirJuego('${juego.url}')">
             > ${juego.nombre}
           </button>
-          <button class="fav-star ${favoritos.includes(juego.nombre) ? "active" : ""}">
+          <button class="fav-star ${favoritos.includes(juego.nombre) ? "active" : ""}"
+                  onclick="toggleFav('${juego.nombre}', event)">
             ★
           </button>
         `;
