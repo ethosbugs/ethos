@@ -6,6 +6,10 @@
   <title>Ethos Technologies</title>
   <link rel="icon" type="image/png" href="https://cdn-1.webcatalog.io/catalog/hacker-typer/hacker-typer-icon.png">
 
+  <!-- Firebase (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
   <style>
     /* ============================
           MATRIX BACKGROUND
@@ -102,6 +106,9 @@
       margin-bottom: 32px;
       text-shadow: 0 0 8px currentColor;
       text-align: center;
+    }
+    .vpn-notice a {
+      color: currentColor;
     }
 
     /* ============================
@@ -219,9 +226,7 @@
 <body>
   <canvas id="matrix"></canvas>
 
-  <!-- ============================
-          TOPBAR
-  ============================ -->
+  <!-- TOPBAR -->
   <div id="ethos-topbar">
     <button class="top-btn" onclick="openEthosChat()">[ ETHOS_CHAT ]</button>
     <button class="top-btn" onclick="openSpotify()">[ SPOTIFY ]</button>
@@ -239,7 +244,8 @@
   <!-- SEARCH -->
   <div class="search-wrapper">
     <div class="search-container">
-      <input type="text" id="searchBar" placeholder="SYSTEM SEARCH ..." autocomplete="off">
+      <input type="text" id="searchBar" placeholder="SYSTEM SEARCH ..." autocomplete="off"
+             oninput="mostrarJuegos(this.value)">
       <button class="search-btn" onclick="mostrarJuegos(document.getElementById('searchBar').value)">⟡</button>
     </div>
   </div>
@@ -257,11 +263,10 @@
     <div>v.236</div>
   </div>
 
-  <!-- ============================
-          JAVASCRIPT
-  ============================ -->
   <script>
-    /* MATRIX BACKGROUND */
+    /* ============================
+          MATRIX BACKGROUND
+    ============================ */
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
     const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789@#$%&*';
@@ -296,7 +301,9 @@
     }
     setInterval(drawMatrix, 50);
 
-    /* THEMES */
+    /* ============================
+          THEMES
+    ============================ */
     let themeIndex = 0;
     const savedTheme = localStorage.getItem("ethos_theme");
     if (savedTheme !== null) {
@@ -313,37 +320,32 @@
     }
 
     /* ============================
-          CÀRREGA DE JOCS
+          FIREBASE INIT
     ============================ */
-    let juegos = JSON.parse(localStorage.getItem("juegosRaw") || "[]");
+    const firebaseConfig = {
+      apiKey: "AIzaSyBEtMYOTg4fBGyShbULdGCuW76nwlUIfiI",
+      authDomain: "ethosgames-a1bc1.firebaseapp.com",
+      projectId: "ethosgames-a1bc1",
+      storageBucket: "ethosgames-a1bc1.firebasestorage.app",
+      messagingSenderId: "877649560017",
+      appId: "1:877649560017:web:598a7bc006323627ab60f0",
+      measurementId: "G-4KKEY3PWQ5"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    /* ============================
+          JOCS DES DE FIRESTORE
+    ============================ */
+    let juegos = [];
     let categoriaActual = "ALL";
-
-    function mostrarJuegos(filtro = "") {
-      const lista = document.getElementById("listaJuegos");
-      lista.innerHTML = "";
-
-      const filtrados = juegos.filter(j =>
-        (categoriaActual === "ALL" || j.category.toUpperCase() === categoriaActual) &&
-        j.name.toLowerCase().includes(filtro.toLowerCase())
-      );
-
-      document.getElementById("counter").textContent = filtrados.length;
-
-      filtrados.forEach(juego => {
-        const card = document.createElement("div");
-        card.className = "game-card";
-        card.innerHTML = `
-          <button class="btn-hacker" onclick="abrirJuego('${juego.url}')">> ${juego.name}</button>
-        `;
-        lista.appendChild(card);
-      });
-    }
 
     function generarCategorias() {
       const catBar = document.getElementById("catBar");
       catBar.innerHTML = "";
 
-      const categories = ["ALL", ...new Set(juegos.map(j => j.category.toUpperCase()))];
+      const categories = ["ALL", ...new Set(juegos.map(j => (j.category || "").toUpperCase()))];
 
       categories.forEach(cat => {
         const btn = document.createElement("button");
@@ -360,6 +362,30 @@
       });
     }
 
+    function mostrarJuegos(filtro = "") {
+      const lista = document.getElementById("listaJuegos");
+      lista.innerHTML = "";
+
+      // Orden alfabètic
+      const ordenats = [...juegos].sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+      const filtrats = ordenats.filter(j =>
+        (categoriaActual === "ALL" || (j.category || "").toUpperCase() === categoriaActual) &&
+        (j.name || "").toLowerCase().includes(filtro.toLowerCase())
+      );
+
+      document.getElementById("counter").textContent = filtrats.length;
+
+      filtrats.forEach(juego => {
+        const card = document.createElement("div");
+        card.className = "game-card";
+        card.innerHTML = `
+          <button class="btn-hacker" onclick="abrirJuego('${juego.url}')">> ${juego.name}</button>
+        `;
+        lista.appendChild(card);
+      });
+    }
+
     function abrirJuego(url) {
       const win = window.open("about:blank", "_blank");
       win.document.write(`
@@ -371,25 +397,28 @@
       `);
     }
 
-    /* AUTO-RELOAD DES DE ADMIN */
-    document.addEventListener("DOMContentLoaded", () => {
-      if (localStorage.getItem("ethosNeedsReload") === "1") {
-        localStorage.removeItem("ethosNeedsReload");
-        location.reload();
-      }
-
+    // Subscripció en temps real a Firestore
+    db.collection("games").onSnapshot(snapshot => {
+      juegos = [];
+      snapshot.forEach(doc => {
+        juegos.push(doc.data());
+      });
       generarCategorias();
-      mostrarJuegos();
+      mostrarJuegos(document.getElementById("searchBar").value);
     });
 
-    /* CLOCK */
+    /* ============================
+          CLOCK
+    ============================ */
     setInterval(() => {
       const now = new Date();
       document.getElementById("clock").textContent =
         now.toLocaleTimeString("es-ES");
     }, 1000);
 
-    /* TOPBAR BUTTONS */
+    /* ============================
+          TOPBAR BUTTONS
+    ============================ */
     function openEthosChat() {
       window.location.href = "chat.html";
     }
