@@ -189,25 +189,28 @@
 
     /* FAVORITE STAR */
     .fav-star {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      color: #888;
-      font-size: 1.6rem;
-      cursor: pointer;
-      transition: 0.25s ease;
-    }
-    .fav-star:hover {
-      transform: translateY(-50%) scale(1.25);
-      color: #fff;
-    }
-    .fav-star.active {
-      color: #ffff00;
-      text-shadow: 0 0 12px #ffff00;
-    }
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #444;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-shadow: 0 0 4px #000;
+}
+
+.fav-star:hover {
+  color: #ccc;
+  transform: translateY(-50%) scale(1.15);
+}
+
+.fav-star.active {
+  color: #ffee00;
+  text-shadow: 0 0 6px #ffee00, 0 0 12px #ffaa00;
+}
 
     /* STATUS BAR */
     .status-bar {
