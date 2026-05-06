@@ -443,8 +443,14 @@ function openSpotify() {
   window.location.href = "https://open.spotify.com/embed/playlist/4L7KXkQeIQpxWNdXMfBVSM?utm_source=generator&theme=0";
 }
 
+/* TECLA R → Google Classroom */
+document.addEventListener("keydown", (e) => {
+  if (e.key.toLowerCase() === "r") {
+    alert("Redirigint a Google Classroom...");
+    window.location.href = "https://classroom.google.com";
+  }
+});
 </script>
 
-  
 </body>
 </html>
