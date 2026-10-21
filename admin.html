@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a0a12">
+<title>ETHOS • ADMIN PANEL</title>
+<style>
+:root {
+  --g: #00ff9d; --c: #00f7ff; --p: #ff00ff; --red: #ff3366;
+  --bg: #0a0a12; --panel: rgba(20, 25, 40, .95); --line: rgba(0, 255, 157, .3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  min-height: 100vh; background: var(--bg); color: var(--g);
+  font-family: 'Courier New', monospace; overflow-x: hidden;
+}
+canvas#matrix {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  z-index: 0; opacity: .3; pointer-events: none;
+}
+.grid-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(rgba(0,255,157,.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0,255,157,.03) 1px, transparent 1px);
+  background-size: 60px 60px; animation: gridMove 40s linear infinite;
+}
+@keyframes gridMove { to { background-position: 60px 60px; } }
+.wrap { position: relative; z-index: 1; }
+
+:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
+
+/* Controles */
+.btn, .input {
+  background: rgba(0,0,0,.85); border: 2px solid var(--g); color: #fff;
+  padding: 12px 20px; border-radius: 50px; font: inherit; font-size: 1rem;
+}
+.btn { cursor: pointer; transition: transform .2s, background .2s, color .2s; }
+.btn:hover { background: #fff; color: #000; transform: scale(1.05); }
+.btn.danger { border-color: var(--red); }
+.btn.danger:hover { background: var(--red); color: #fff; }
+.btn.small { padding: 8px 16px; font-size: .9rem; }
+.input::placeholder { color: rgba(255,255,255,.45); }
+
+/* Cabecera */
+header.top {
+  position: sticky; top: 0; z-index: 30; padding: 16px 40px;
+  background: rgba(10,12,25,.97); border-bottom: 2px solid var(--g);
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.logo { font-size: 2.2rem; font-weight: 900; letter-spacing: 4px; display: flex; align-items: center; gap: 8px; color: var(--g); text-decoration: none; }
+.logo::before { content: ">"; font-size: 2.6rem; text-shadow: 0 0 20px var(--g); }
+.controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* Categorías */
+.cat-bar {
+  padding: 14px 40px; background: rgba(12,15,30,.95);
+  display: flex; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--line);
+}
+.cat-btn {
+  background: transparent; border: 2px solid var(--g); color: #fff; font: inherit;
+  padding: 8px 22px; border-radius: 50px; cursor: pointer; transition: all .3s;
+}
+.cat-btn.active, .cat-btn:hover { background: var(--g); color: #000; box-shadow: 0 0 20px var(--g); }
+
+/* Juegos */
+.games {
+  padding: 40px; display: grid; gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+.card {
+  background: var(--panel); border: 2px solid var(--g); border-radius: 16px;
+  padding: 20px; cursor: pointer; position: relative;
+  transition: transform .3s, border-color .3s, box-shadow .3s;
+}
+.card:hover, .card:focus-visible { transform: translateY(-8px); border-color: #fff; box-shadow: 0 0 30px rgba(0,255,157,.3); }
+.card img {
+  width: 100%; height: 170px; object-fit: contain; background: #0f0f1f;
+  border: 1px solid rgba(0,255,157,.2); border-radius: 12px; padding: 10px;
+}
+.card h3 { font-size: 1.4rem; margin: 12px 0 4px; color: #fff; word-break: break-word; }
+.card small { opacity: .7; }
+.fav {
+  position: absolute; top: 14px; right: 14px; font-size: 1.8rem; line-height: 1;
+  background: none; border: 0; color: var(--g); cursor: pointer; z-index: 2;
+}
+.skeleton { height: 290px; cursor: default; animation: pulse 1.2s ease-in-out infinite alternate; }
+@keyframes pulse { from { opacity: .35; } to { opacity: .8; } }
+.empty { grid-column: 1 / -1; text-align: center; padding: 60px 0; opacity: .8; font-size: 1.2rem; }
+.empty.error { color: #ff5555; opacity: 1; }
+.counter { position: fixed; bottom: 20px; right: 30px; z-index: 35; font-size: 1.1rem; text-shadow: 0 0 10px #000; }
+
+/* Reproductor */
+.player { position: fixed; inset: 0; z-index: 100; background: #000; display: none; flex-direction: column; }
+.player.open { display: flex; }
+.player-bar { display: flex; align-items: center; gap: 10px; padding: 10px 20px; background: rgba(10,12,25,.98); border-bottom: 2px solid var(--g); }
+.player-bar strong { flex: 1; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.player iframe { flex: 1; width: 100%; border: 0; background: #000; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 70px; left: 50%; transform: translate(-50%, 20px); z-index: 200;
+  background: #000; border: 2px solid var(--g); color: #fff; padding: 12px 24px; border-radius: 50px;
+  opacity: 0; pointer-events: none; transition: all .3s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.err { border-color: var(--red); }
+
+/* Landing */
+.center { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px 20px; }
+.holo-logo {
+  width: min(320px, 70vw); aspect-ratio: 1; border: 6px solid var(--g); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 100px var(--g), inset 0 0 80px rgba(0,255,157,.5);
+  animation: holoPulse 4s ease-in-out infinite alternate;
+}
+.holo-logo span { font-size: clamp(2rem, 9vw, 5rem); font-weight: 900; letter-spacing: .2em; margin-right: -.2em; color: var(--c); text-shadow: 0 0 40px var(--p); }
+@keyframes holoPulse { to { box-shadow: 0 0 130px var(--g), 0 0 200px var(--p); } }
+.title { margin-top: 40px; font-size: clamp(1.6rem, 6vw, 3.4rem); letter-spacing: .2em; color: var(--c); }
+.sub { margin-top: 16px; font-size: 1.2rem; opacity: .9; }
+.enter-btn {
+  margin-top: 50px; padding: 20px 70px; font: inherit; font-size: 1.8rem; letter-spacing: 8px;
+  background: transparent; border: 3px solid var(--g); color: var(--g); cursor: pointer; border-radius: 8px; transition: all .4s;
+}
+.enter-btn:hover { background: var(--p); border-color: var(--p); color: #000; box-shadow: 0 0 60px var(--p); transform: scale(1.06); }
+.admin-link { margin-top: 60px; color: var(--p); text-decoration: none; opacity: .75; }
+.admin-link:hover { opacity: 1; }
+
+/* Admin */
+.gate { position: fixed; inset: 0; z-index: 150; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 20px; }
+.gate form { width: min(380px, 100%); display: grid; gap: 14px; text-align: center; }
+.gate h1, .admin h1 { color: var(--p); }
+.gate .msg { min-height: 1.3em; color: var(--red); }
+.admin { max-width: 900px; margin: 0 auto; padding: 30px 20px 80px; }
+.admin-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.form { display: grid; gap: 12px; }
+.form .input { border-radius: 8px; width: 100%; color: var(--g); }
+.row { display: flex; gap: 10px; }
+.row .btn { flex: 1; border-radius: 8px; font-weight: bold; }
+.list-head { margin: 40px 0 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.game-item {
+  background: var(--panel); padding: 14px; margin: 10px 0; border: 1px solid var(--g); border-radius: 10px;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+}
+.game-item .info { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.game-item img { width: 52px; height: 52px; object-fit: contain; background: #0f0f1f; border-radius: 8px; flex: none; }
+.game-item .info div { min-width: 0; word-break: break-word; }
+.game-item .acts { display: flex; gap: 8px; flex: none; }
+
+@media (max-width: 640px) {
+  header.top, .cat-bar, .games { padding-left: 16px; padding-right: 16px; }
+  .controls { width: 100%; } .controls .input { flex: 1; min-width: 0; }
+  .game-item { flex-direction: column; align-items: stretch; }
+  .enter-btn { padding: 16px 40px; font-size: 1.4rem; }
+}
+
+/* Extras v3.2 */
+.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px 40px 0}
+.toolbar select{appearance:none;padding-right:20px}
+.sec-title{grid-column:1/-1;font-size:1.1rem;color:var(--c);letter-spacing:.15em;margin-top:6px}
+.chip-n{opacity:.6;margin-left:6px;font-size:.85em}
+.btn:disabled{opacity:.5;cursor:wait}
+.hint{opacity:.6;font-size:.9rem}
+.admin .hint{margin-top:6px}
+.card .badge{position:absolute;left:14px;top:14px;background:var(--p);color:#000;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:50px;z-index:2}
+@media (max-width:640px){.toolbar{padding:12px 16px 0}}
+[hidden]{display:none!important}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}
+</style>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+
+<!-- Acceso con contraseña -->
+<div class="gate" id="gate">
+  <form id="gateForm" autocomplete="off">
+    <h1>ACCESO ADMIN</h1>
+    <input class="input" type="password" id="pass" placeholder="Contraseña" aria-label="Contraseña" autofocus>
+    <button class="btn" type="submit">ENTRAR</button>
+    <div class="msg" id="gateMsg" role="alert"></div>
+    <p class="hint">La protección real requiere autenticación y reglas de Firestore.</p>
+    <a href="ethos.html" style="color:var(--g);opacity:.7">← Volver a los juegos</a>
+  </form>
+</div>
+
+<!-- Panel (oculto hasta iniciar sesión) -->
+<div class="wrap admin" id="panel" hidden>
+  <div class="admin-head">
+    <h1>ETHOS ADMIN PANEL</h1>
+    <div class="controls">
+      <a class="btn small" href="ethos.html" style="text-decoration:none">Ver web</a>
+      <button class="btn small danger" id="logout">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <form class="form" id="form">
+    <input class="input" id="nombre" placeholder="Nombre del juego" required maxlength="80">
+    <input class="input" id="url" type="url" placeholder="URL completa del juego (https://...)" required>
+    <input class="input" id="category" list="cats" placeholder="Categoría (ej: Acción, Simulación)" maxlength="40">
+    <datalist id="cats"></datalist>
+    <input class="input" id="logo" type="url" placeholder="Link del logo (opcional)">
+    <div class="row">
+      <button class="btn" type="submit" id="saveBtn">💾 GUARDAR JUEGO</button>
+      <button class="btn" type="button" id="cancelBtn" hidden>CANCELAR EDICIÓN</button>
+    </div>
+  </form>
+
+  <div class="list-head">
+    <h2>Juegos en Firebase (<span id="total">0</span>)</h2>
+    <input class="input small" type="search" id="filtro" placeholder="Filtrar lista..." aria-label="Filtrar lista">
+  </div>
+  <div id="listaAdmin"></div>
+</div>
+
+<script>
+// Misma configuración y misma colección ("games") que antes: los datos no cambian.
+const firebaseConfig = {
+  apiKey: "AIzaSyBEtMYOTg4fBGyShbULdGCuW76nwlUIfiI",
+  authDomain: "ethosgames-a1bc1.firebaseapp.com",
+  projectId: "ethosgames-a1bc1",
+  storageBucket: "ethosgames-a1bc1.firebasestorage.app",
+  messagingSenderId: "877649560017",
+  appId: "1:877649560017:web:598a7bc006323627ab60f0"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+<script>
+// Utilidades compartidas
+const $ = id => document.getElementById(id);
+
+// Escapa texto antes de meterlo en innerHTML (evita XSS)
+const esc = s => String(s ?? "").replace(/[&<>"']/g,
+  c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+// Solo permite http(s); bloquea javascript:, data:, etc.
+function safeUrl(u) {
+  try {
+    const x = new URL(String(u || "").trim());
+    return ["http:", "https:"].includes(x.protocol) ? x.href : "";
+  } catch { return ""; }
+}
+
+let toastTimer;
+function toast(msg, error = false) {
+  let t = $("toast");
+  if (!t) { t = document.createElement("div"); t.id = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+  t.className = "toast show" + (error ? " err" : "");
+  t.textContent = msg;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+// Fondo Matrix (pausa si la pestaña no está visible o si el usuario reduce animaciones)
+function startMatrix() {
+  const canvas = $("matrix");
+  if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const chars = "01アイウエオETHOS▓▒░█◆◇";
+  let drops = [];
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drops = Array(Math.ceil(window.innerWidth / 18)).fill(1);
+  }
+  function draw() {
+    if (document.hidden) return;
+    ctx.fillStyle = "rgba(10,12,20,0.1)";
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    ctx.fillStyle = "#00ff9d";
+    ctx.font = "15px monospace";
+    drops.forEach((y, i) => {
+      ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 18, y * 18);
+      if (y * 18 > window.innerHeight && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    });
+  }
+  resize();
+  window.addEventListener("resize", resize, { passive: true });
+  window.setInterval(draw, 70);
+}
+startMatrix();
+</script>
+<script>
+// ---------- Acceso ----------
+// AVISO: este control solo oculta la interfaz; no es autenticación segura.
+// Protege Firestore con Firebase Authentication y reglas que autoricen solo al administrador.
+// Se guarda el hash SHA-256 de la contraseña, no la contraseña en texto plano.
+// Para cambiarla: abre la consola del navegador y ejecuta
+//   crypto.subtle.digest("SHA-256", new TextEncoder().encode("nueva")).then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2,"0")).join("")))
+const PASS_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
+
+async function sha256(s) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
+}
+
+let fails = 0, lockUntil = 0;
+
+function entrar() {
+  $("gate").hidden = true;
+  $("panel").hidden = false;
+  cargarJuegosAdmin();
+}
+
+$("gateForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = $("gateMsg");
+  if (Date.now() < lockUntil) {
+    return msg.textContent = `Demasiados intentos. Espera ${Math.ceil((lockUntil - Date.now()) / 1000)} s.`;
+  }
+  if (!crypto.subtle) return msg.textContent = "Abre la web desde https o localhost (Vercel lo hace por defecto).";
+  let hash;
+  try { hash = await sha256($("pass").value); } catch (err) { msg.textContent = "No se pudo verificar la contraseña. Usa HTTPS o localhost."; return; }
+  if (hash === PASS_HASH) {
+    sessionStorage.setItem("ethos_admin", PASS_HASH);
+    $("pass").value = "";
+    return entrar();
+  }
+  fails++;
+  $("pass").value = "";
+  if (fails >= 5) { lockUntil = Date.now() + 30000; fails = 0; msg.textContent = "Demasiados intentos. Espera 30 s."; }
+  else msg.textContent = "Contraseña incorrecta.";
+});
+
+$("logout").onclick = () => { sessionStorage.removeItem("ethos_admin"); location.reload(); };
+
+if (sessionStorage.getItem("ethos_admin") === PASS_HASH) entrar();
+
+// ---------- Datos (mismo sistema Firestore: colección "games") ----------
+let editId = null, juegos = [];
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const nombre = $("nombre").value.trim();
+  const url = safeUrl($("url").value);
+  const category = $("category").value.trim();
+  const logoRaw = $("logo").value.trim();
+  const logo = logoRaw ? safeUrl(logoRaw) : "";
+
+  if (!nombre || !url) return toast("Nombre y una URL válida (http/https) son obligatorios", true);
+  if (logoRaw && !logo) return toast("El link del logo no es válido", true);
+
+  $("saveBtn").disabled = true;
+  try {
+    if (editId) await db.collection("games").doc(editId).update({ nombre, url, category, logo });
+    else await db.collection("games").add({ nombre, url, category, logo, timestamp: Date.now() });
+    toast("¡Juego guardado correctamente!");
+    limpiarFormulario();
+    cargarJuegosAdmin();
+  } catch (err) {
+    console.error(err);
+    toast("Error al guardar. Revisa tu conexión y las reglas de Firestore.", true);
+  } finally { $("saveBtn").disabled = false; }
+});
+
+function limpiarFormulario() {
+  $("form").reset();
+  editId = null;
+  $("cancelBtn").hidden = true;
+  $("saveBtn").textContent = "💾 GUARDAR JUEGO";
+}
+$("cancelBtn").onclick = limpiarFormulario;
+
+async function cargarJuegosAdmin() {
+  try {
+    const snap = await db.collection("games").get();
+    juegos = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (a.nombre || "").localeCompare(b.nombre || ""));
+    $("total").textContent = juegos.length;
+    $("cats").innerHTML = [...new Set(juegos.map(j => j.category).filter(Boolean))]
+      .map(c => `<option value="${esc(c)}">`).join("");
+    pintarLista();
+  } catch (err) {
+    console.error(err);
+    $("listaAdmin").innerHTML = '<p class="empty error">No se pudieron cargar los juegos.</p>';
+  }
+}
+
+function pintarLista() {
+  const f = $("filtro").value.trim().toLowerCase();
+  const items = juegos.filter(j => !f || (j.nombre || "").toLowerCase().includes(f));
+  $("listaAdmin").innerHTML = items.length ? items.map(j => `
+    <div class="game-item">
+      <div class="info">
+        ${safeUrl(j.logo) ? `<img src="${esc(safeUrl(j.logo))}" alt="" loading="lazy">` : ""}
+        <div><strong>${esc(j.nombre)}</strong><br><small>${esc(j.category || "")}</small></div>
+      </div>
+      <div class="acts">
+        <button class="btn small" data-edit="${esc(j.id)}">EDITAR</button>
+        <button class="btn small danger" data-del="${esc(j.id)}">ELIMINAR</button>
+      </div>
+    </div>`).join("") : '<p class="empty">No hay juegos.</p>';
+}
+$("filtro").addEventListener("input", pintarLista);
+
+$("listaAdmin").addEventListener("click", async e => {
+  const ed = e.target.closest("[data-edit]");
+  const del = e.target.closest("[data-del]");
+  if (ed) {
+    const j = juegos.find(x => x.id === ed.dataset.edit);
+    if (!j) return;
+    editId = j.id;
+    $("nombre").value = j.nombre || "";
+    $("url").value = j.url || "";
+    $("category").value = j.category || "";
+    $("logo").value = j.logo || "";
+    $("cancelBtn").hidden = false;
+    $("saveBtn").textContent = "💾 ACTUALIZAR JUEGO";
+    scrollTo({ top: 0, behavior: "smooth" });
+    $("nombre").focus();
+  }
+  if (del) {
+    const j = juegos.find(x => x.id === del.dataset.del);
+    if (!j || !confirm(`¿Eliminar "${j.nombre}" permanentemente?`)) return;
+    try {
+      await db.collection("games").doc(j.id).delete();
+      if (editId === j.id) limpiarFormulario();
+      toast("Juego eliminado");
+      cargarJuegosAdmin();
+    } catch (err) { console.error(err); toast("Error al eliminar", true); }
+  }
+});
+</script>
+</body>
+</html>
